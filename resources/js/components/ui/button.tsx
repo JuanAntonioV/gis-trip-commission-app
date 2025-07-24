@@ -40,6 +40,8 @@ function Button({
   variant,
   size,
   asChild = false,
+  disabled,
+  loading = false,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
@@ -52,10 +54,10 @@ function Button({
     <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
-      disabled={props.disabled || props.loading}
       {...props}
+      disabled={disabled || loading}
     >
-        {props.loading ? (
+        {loading ? (
             <div className="flex items-center justify-center">
                 <Loader2 className="size-4 animate-spin" />
                 <span className="ml-2">

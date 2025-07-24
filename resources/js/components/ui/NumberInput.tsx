@@ -4,8 +4,8 @@ import { Input } from './input';
 import { Label } from './label';
 
 type Props = {
-    value: string;
-    onChange: (value: string) => void;
+    value: string | number;
+    onChange: (value: string | number) => void;
     label?: string;
     placeholder?: string;
     errors?: string;

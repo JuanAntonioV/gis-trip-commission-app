@@ -1,3 +1,4 @@
+import AddVehicleFormModal from '@/components/AddVehicleFormModal';
 import { DataTable } from '@/components/DataTable';
 import Heading from '@/components/heading';
 import AppLayout from '@/layouts/app-layout';
@@ -24,7 +25,7 @@ const ManageVehiclePage = ({ vehicles }: Props) => {
             <main className="p-6">
                 <Heading title="Kelola Kendaraan" description="Kelola kendaraan yang tersedia untuk perjalanan." />
                 <section className="section">
-                    <DataTable data={vehicles} columns={columns} />
+                    <DataTable data={vehicles} columns={columns} leftHeaderSection={<AddVehicleFormModal />} />
                 </section>
             </main>
         </AppLayout>
