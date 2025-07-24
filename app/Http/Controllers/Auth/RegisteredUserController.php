@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\Formatter;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -32,14 +33,23 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'phone' => 'required|string|max:20',
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $formatedPhone = Formatter::formatPhoneNumber($request->phone);
+
+        if (!$formatedPhone) {
+            return back()->withErrors(['phone' => 'Nomor telepon tidak valid.']);
+        }
+
         $user = User::create([
             'name' => $request->name,
+            'phone' => $formatedPhone,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'joined_at' => now(),
         ]);
 
         event(new Registered($user));

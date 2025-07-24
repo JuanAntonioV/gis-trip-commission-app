@@ -3,14 +3,19 @@ import { Transition } from '@headlessui/react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 
-import DeleteUser from '@/components/delete-user';
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import DatePickerInput from '@/components/ui/datepicker-input';
 import { Label } from '@/components/ui/label';
+import NumberInput from '@/components/ui/NumberInput';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import TextareaInput from '@/components/ui/TextareaInput';
+import TextInput from '@/components/ui/TextInput';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
+import dayjs from 'dayjs';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -22,6 +27,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 type ProfileForm = {
     name: string;
     email: string;
+    phone: string;
+    address: string;
+    birth_date: Date | null;
+    religion: string | null;
+    married: boolean | null;
+    joined_at: Date | null;
 };
 
 export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
@@ -30,6 +41,12 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
         name: auth.user.name,
         email: auth.user.email,
+        phone: auth.user.phone || '',
+        address: auth.user.address || '',
+        birth_date: auth.user.birth_date ? dayjs(auth.user.birth_date).toDate() : null,
+        religion: auth.user.religion || null,
+        married: auth.user.married || null,
+        joined_at: auth.user.joined_at ? dayjs(auth.user.joined_at).toDate() : null,
     });
 
     const submit: FormEventHandler = (e) => {
@@ -49,38 +66,88 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                     <HeadingSmall title="Profile information" description="Update your name and email address" />
 
                     <form onSubmit={submit} className="space-y-6">
-                        <div className="grid gap-2">
-                            <Label htmlFor="name">Name</Label>
+                        <TextInput
+                            value={data.name}
+                            onChange={(value) => setData('name', value as string)}
+                            label="Name"
+                            placeholder="Your name"
+                            errors={errors.name}
+                            autoComplete="name"
+                        />
 
-                            <Input
-                                id="name"
-                                className="mt-1 block w-full"
-                                value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
-                                required
-                                autoComplete="name"
-                                placeholder="Full name"
+                        <TextInput
+                            value={data.email}
+                            onChange={(value) => setData('email', value as string)}
+                            label="Email"
+                            placeholder="example@email.com"
+                            errors={errors.email}
+                            type="email"
+                            autoComplete="email"
+                        />
+
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <DatePickerInput
+                                label="Tanggal Lahir"
+                                value={data.birth_date ? dayjs(data.birth_date).toDate() : undefined}
+                                onChange={(date) => setData('birth_date', date ? dayjs(date).toDate() : null)}
+                                errors={errors.birth_date}
                             />
-
-                            <InputError className="mt-2" message={errors.name} />
+                            <NumberInput
+                                value={data.phone}
+                                onChange={(value) => setData('phone', value as string)}
+                                label="Phone"
+                                placeholder="Your phone number"
+                                errors={errors.phone}
+                                autoComplete="tel"
+                            />
                         </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="email">Email address</Label>
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <div className="grid gap-2">
+                                <Label htmlFor="religion">Agama</Label>
+                                <Select
+                                    value={data.religion || ''}
+                                    onValueChange={(value) => setData('religion', value || null)}
+                                    disabled={processing}
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Pilih agama" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'].map((religion) => (
+                                            <SelectItem key={religion} value={religion}>
+                                                {religion}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
 
-                            <Input
-                                id="email"
-                                type="email"
-                                className="mt-1 block w-full"
-                                value={data.email}
-                                onChange={(e) => setData('email', e.target.value)}
-                                required
-                                autoComplete="username"
-                                placeholder="Email address"
-                            />
+                                <InputError className="mt-2" message={errors.religion} />
+                            </div>
 
-                            <InputError className="mt-2" message={errors.email} />
+                            <div className="mt-5 flex items-center space-x-3">
+                                <Checkbox
+                                    id="married"
+                                    name="married"
+                                    checked={data.married || false}
+                                    onClick={() => setData('married', !data.married)}
+                                    tabIndex={3}
+                                    className="size-5"
+                                />
+                                <Label htmlFor="married" className="cursor-pointer">
+                                    Sudah menikah
+                                </Label>
+                            </div>
                         </div>
+
+                        <TextareaInput
+                            value={data.address}
+                            onChange={(value) => setData('address', value as string)}
+                            label="Address"
+                            placeholder="Your address"
+                            errors={errors.address}
+                            rows={3}
+                        />
 
                         {mustVerifyEmail && auth.user.email_verified_at === null && (
                             <div>
@@ -120,7 +187,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                     </form>
                 </div>
 
-                <DeleteUser />
+                {/* <DeleteUser /> */}
             </SettingsLayout>
         </AppLayout>
     );

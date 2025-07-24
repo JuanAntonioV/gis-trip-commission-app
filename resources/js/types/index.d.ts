@@ -36,6 +36,12 @@ export interface User {
     name: string;
     email: string;
     avatar?: string;
+    phone?: string | null;
+    address?: string | null;
+    birth_date?: string | null; // ISO date string
+    religion?: string | null;
+    married?: boolean | null;
+    joined_at?: string | null; // ISO date string
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;

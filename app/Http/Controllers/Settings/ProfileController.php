@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Settings;
 
+use App\Helpers\Formatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -29,7 +30,14 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $payload = $request->validated();
+        $payload['birth_date'] = $payload['birth_date'] ? date('Y-m-d', strtotime($payload['birth_date'])) : null;
+        $payload['joined_at'] = $payload['joined_at'] ? date('Y-m-d', strtotime($payload['joined_at'])) : null;
+        $formattedPhone = Formatter::formatPhoneNumber($payload['phone']);
+        $payload['phone'] = $formattedPhone ? $formattedPhone : null;
+        $payload['married'] = $payload['married'] ? true : false;
+
+        $request->user()->fill($payload);
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;

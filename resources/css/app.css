@@ -7,6 +7,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@utility flex-center {
+    @apply flex items-center justify-center;
+}
+
+@utility flex-between {
+    @apply flex items-center justify-between;
+}
+
 @theme {
     --font-sans:
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
