@@ -43,6 +43,7 @@ export default [
     {
         rules: {
             '@typescript-eslint/no-explicit-any': 'off',
+            'react-hooks/exhaustive-deps': 'off',
         },
     },
     prettier, // Turn off all rules that might conflict with Prettier

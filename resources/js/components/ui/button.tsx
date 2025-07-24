@@ -42,6 +42,7 @@ function Button({
   asChild = false,
   disabled,
   loading = false,
+  children,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
@@ -65,7 +66,7 @@ function Button({
                 </span>
             </div>
         ) : (
-            props.children
+            children
         )}
     </Comp>
   )

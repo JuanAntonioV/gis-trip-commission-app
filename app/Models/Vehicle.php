@@ -11,11 +11,11 @@ class Vehicle extends Model
         'license_plate',
         'type',
         'capacity',
-        'status',
+        'available',
     ];
 
     protected $casts = [
         'capacity' => 'integer',
-        'status' => 'boolean',
+        'available' => 'boolean',
     ];
 }

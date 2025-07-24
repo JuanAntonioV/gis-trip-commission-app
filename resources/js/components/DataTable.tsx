@@ -44,7 +44,7 @@ export function DataTable<TData, TValue>({
     const [sorting, setSorting] = useState<SortingState>([]);
     const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
     const [searchInput, setSearchInput] = useState('');
-    const globalSearch = useDebounce(searchInput, 500);
+    const globalSearch = useDebounce(searchInput, 300);
 
     const fuzzyFilter: FilterFn<TData> = (row, columnId, value, addMeta) => {
         const itemRank = rankItem(row.getValue(columnId), value);
@@ -68,9 +68,9 @@ export function DataTable<TData, TValue>({
 
     useEffect(() => {
         if (globalSearch) {
-            setColumnFilters([{ id: 'global', value: globalSearch }]);
+            table.setGlobalFilter(globalSearch);
         } else {
-            setColumnFilters([]);
+            table.setGlobalFilter('');
         }
     }, [globalSearch]);
 
@@ -87,9 +87,9 @@ export function DataTable<TData, TValue>({
         getFilteredRowModel: getFilteredRowModel(),
         getRowId: primaryKey ? (row: any) => row[primaryKey!] : undefined,
         enableMultiSort: false,
-        onColumnFiltersChange: (updaterOrValue) => valueUpdater(updaterOrValue, columnFilters),
-        onSortingChange: (updaterOrValue) => valueUpdater(updaterOrValue, sorting),
-        onPaginationChange: (updaterOrValue) => valueUpdater(updaterOrValue, pagination),
+        onColumnFiltersChange: (updaterOrValue) => valueUpdater(updaterOrValue, columnFilters, setColumnFilters),
+        onSortingChange: (updaterOrValue) => valueUpdater(updaterOrValue, sorting, setSorting),
+        onPaginationChange: (updaterOrValue) => valueUpdater(updaterOrValue, pagination, setPagination),
         filterFns: {
             fuzzy: fuzzyFilter,
         },
@@ -102,22 +102,6 @@ export function DataTable<TData, TValue>({
             pagination,
         },
     });
-
-    const handleColSort = (columnId: string) => {
-        const column = table.getColumn(columnId);
-        if (column) {
-            // Cycle through: off -> asc -> desc -> off
-            const currentSort = column.getIsSorted();
-            if (!currentSort) {
-                column.toggleSorting(false); // set to asc
-            } else if (currentSort === 'asc') {
-                column.toggleSorting(true); // set to desc
-            } else if (currentSort === 'desc') {
-                // turn sorting off
-                column.clearSorting();
-            }
-        }
-    };
 
     const handleResetSearch = () => {
         setSearchInput('');
@@ -165,7 +149,7 @@ export function DataTable<TData, TValue>({
                                             key={header.id}
                                             style={{ width: meta?.width || 'auto' }}
                                             className={cn(header.column.getCanSort() && 'hover:bg-secondary')}
-                                            onClick={() => header.column.toggleSorting()}
+                                            onClick={header.column.getToggleSortingHandler()}
                                         >
                                             <div
                                                 className={cn(
@@ -182,8 +166,8 @@ export function DataTable<TData, TValue>({
                                                     <span
                                                         className={cn(
                                                             "absolute top-0 right-3 bottom-0 h-full w-3 before:absolute before:bottom-1/2 before:left-0 before:text-xs before:!leading-none before:text-gray-300 before:content-['▲'] after:absolute after:top-1/2 after:left-0 after:text-xs after:!leading-none after:text-gray-300 after:content-['▼'] dark:before:text-gray-500 dark:after:text-gray-500",
-                                                            header.column.getIsSorted() ? 'opacity-100' : 'opacity-0',
-                                                            header.column.getCanSort() ? 'cursor-pointer' : 'cursor-default',
+                                                            header.column.getIsSorted() === 'asc' && 'before:text-primary dark:before:text-primary',
+                                                            header.column.getIsSorted() === 'desc' && 'after:text-primary dark:after:text-primary',
                                                         )}
                                                     />
                                                 )}

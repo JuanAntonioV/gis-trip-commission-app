@@ -30,14 +30,6 @@ class VehicleController extends Controller
         return redirect()->route('vehicles.index')->with('success', 'Vehicle created successfully.');
     }
 
-    public function show($vehicle)
-    {
-        $vehicle = \App\Models\Vehicle::findOrFail($vehicle);
-        return Inertia::render('vehicles/ShowVehiclePage', [
-            'vehicle' => $vehicle
-        ]);
-    }
-
     public function update(Request $request, $vehicle)
     {
         $request->validate([

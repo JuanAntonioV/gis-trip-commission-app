@@ -7,8 +7,9 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-export function valueUpdater<T extends Updater<any>>(updater: T, state: any) {
-    return updater instanceof Function ? updater(state) : updater;
+export function valueUpdater<T extends Updater<any>>(updater: T, state: any, setState: (value: any) => void) {
+    const newValue = updater instanceof Function ? updater(state) : updater;
+    setState(newValue);
 }
 
 export function onlyNumber(e: React.ChangeEvent<HTMLInputElement>) {
