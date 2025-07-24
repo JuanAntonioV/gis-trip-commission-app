@@ -47,3 +47,12 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export type Vehicle = {
+    id: number;
+    name: string;
+    type: string;
+    license_plate: string;
+    capacity: number;
+    available: boolean;
+};
