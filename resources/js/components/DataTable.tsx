@@ -119,6 +119,10 @@ export function DataTable<TData, TValue>({
         }
     };
 
+    const handleResetSearch = () => {
+        setSearchInput('');
+    };
+
     return (
         <div>
             <div className="flex w-full flex-wrap items-center justify-between gap-4 pb-4 md:flex-nowrap">
@@ -140,7 +144,11 @@ export function DataTable<TData, TValue>({
                             <Search className="size-4 text-muted-foreground" />
                         </span>
                     </div>
-                    {searchInput && <Button variant="outline">Reset Filter</Button>}
+                    {searchInput && (
+                        <Button variant="outline" onClick={handleResetSearch}>
+                            Reset Filter
+                        </Button>
+                    )}
                     {leftHeaderSection}
                 </div>
                 {rightHeaderSection && <div className="flex w-full flex-wrap items-center justify-end gap-2">{rightHeaderSection}</div>}
