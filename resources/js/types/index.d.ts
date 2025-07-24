@@ -56,3 +56,9 @@ export type Vehicle = {
     capacity: number;
     available: boolean;
 };
+
+export type LocationType = {
+    id: number;
+    name: string;
+    description?: string | null;
+};

@@ -58,8 +58,8 @@ const EditVehicleFormModal = ({ initialData }: Props) => {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Buat kendaraan</DialogTitle>
-                    <DialogDescription>Isi form di bawah ini untuk menambahkan kendaraan baru.</DialogDescription>
+                    <DialogTitle>Ubah kendaraan</DialogTitle>
+                    <DialogDescription>Isi form di bawah ini untuk memperbarui kendaraan.</DialogDescription>
                 </DialogHeader>
 
                 <form onSubmit={submit} className="space-y-4">

@@ -12,9 +12,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('vehicles')->group(function () {
         Route::post('/', [\App\Http\Controllers\VehicleController::class, 'store'])->name('vehicles.store');
-        Route::get('/{vehicle}', [\App\Http\Controllers\VehicleController::class, 'show'])->name('vehicles.show');
         Route::put('/{vehicle}', [\App\Http\Controllers\VehicleController::class, 'update'])->name('vehicles.update');
         Route::delete('/{vehicle}', [\App\Http\Controllers\VehicleController::class, 'destroy'])->name('vehicles.destroy');
+    });
+
+    Route::get('/kelola-tipe-lokasi', [\App\Http\Controllers\LocationTypeController::class, 'index'])->name('location-types.index');
+
+    Route::prefix('location-types')->group(function () {
+        Route::post('/', [\App\Http\Controllers\LocationTypeController::class, 'store'])->name('location-types.store');
+        Route::put('/{locationType}', [\App\Http\Controllers\LocationTypeController::class, 'update'])->name('location-types.update');
+        Route::delete('/{locationType}', [\App\Http\Controllers\LocationTypeController::class, 'destroy'])->name('location-types.destroy');
     });
 });
 

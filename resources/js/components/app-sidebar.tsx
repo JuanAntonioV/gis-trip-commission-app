@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Car, LayoutGrid } from 'lucide-react';
+import { Car, LayoutGrid, LocateFixed } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -17,6 +17,11 @@ const mainNavItems: NavItem[] = [
         title: 'Kelola Kendaraan',
         href: '/kelola-kendaraan',
         icon: Car,
+    },
+    {
+        title: 'Kelola Tipe Lokasi',
+        href: '/kelola-tipe-lokasi',
+        icon: LocateFixed,
     },
 ];
 
