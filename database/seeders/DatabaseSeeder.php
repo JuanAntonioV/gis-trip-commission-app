@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             // Example: UserSeeder::class,
             PermissionSeeder::class,
             RoleSeeder::class,
+            VehicleSeeder::class,
         ]);
     }
 }

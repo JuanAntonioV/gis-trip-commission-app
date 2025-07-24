@@ -26,7 +26,7 @@ export const columns: ColumnDef<Vehicle>[] = [
     },
     {
         accessorKey: 'capacity',
-        header: 'Kapasitas',
+        header: 'Kapasitas (KG)',
     },
     {
         accessorKey: 'available',
