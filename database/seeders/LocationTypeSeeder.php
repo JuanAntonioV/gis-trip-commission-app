@@ -19,6 +19,7 @@ class LocationTypeSeeder extends Seeder
 
         $locationTypes = [
             ['name' => 'Gudang', 'description' => 'Tempat penyimpanan barang'],
+            ['name' => 'Toko', 'description' => 'Tempat tujuan pengiriman barang'],
             ['name' => 'Kantor', 'description' => 'Tempat administrasi dan manajemen'],
             ['name' => 'SPBU', 'description' => 'Stasiun Pengisian Bahan Bakar Umum'],
             ['name' => 'Bengkel', 'description' => 'Tempat perbaikan kendaraan'],
