@@ -74,6 +74,9 @@ class LocationController extends Controller
 
         $location->update($request->all());
 
+        $location->type()->associate($request->input('location_type_id'));
+        $location->save();
+
         return redirect()->route('locations.index')->with('success', 'Location updated successfully.');
     }
 
