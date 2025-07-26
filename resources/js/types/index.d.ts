@@ -70,11 +70,11 @@ export type Location = {
     address: string;
     postal_code?: string | null;
     description?: string | null;
-    latitude?: number | null; // Latitude for the location
-    longitude?: number | null; // Longitude for the location
+    latitude?: string | null; // Latitude for the location
+    longitude?: string | null; // Longitude for the location
     created_at: Date;
     updated_at: Date;
-    location_type?: LocationType; // Optional relationship to LocationType
+    type?: LocationType; // Optional relationship to LocationType
 };
 
 interface TGeoLocation {

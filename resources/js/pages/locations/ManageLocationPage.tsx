@@ -12,6 +12,7 @@ type Props = {
     locationTypes: LocationType[];
 };
 const ManageLocationPage = ({ locations }: Props) => {
+    console.log('🚀 ~ ManageLocationPage ~ locations:', locations);
     return (
         <AppLayout>
             <Head title="Kelola Lokasi" />
@@ -24,7 +25,7 @@ const ManageLocationPage = ({ locations }: Props) => {
                         columns={columns}
                         leftHeaderSection={
                             <Button variant={'secondary'} asChild>
-                                <Link href={'/kelola-lokasi/buat'} className="flex items-center gap-2">
+                                <Link href={route('locations.create')} className="flex items-center gap-2">
                                     <Plus />
                                     Buat baru
                                 </Link>

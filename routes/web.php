@@ -27,6 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/kelola-lokasi', [\App\Http\Controllers\LocationController::class, 'index'])->name('locations.index');
     Route::get('/kelola-lokasi/buat', [\App\Http\Controllers\LocationController::class, 'create'])->name('locations.create');
     Route::get('/kelola-lokasi/{location}', [\App\Http\Controllers\LocationController::class, 'show'])->name('locations.show');
+    Route::get('/kelola-lokasi/{location}/edit', [\App\Http\Controllers\LocationController::class, 'edit'])->name('locations.edit');
 
     Route::prefix('locations')->group(function () {
         Route::post('/', [\App\Http\Controllers\LocationController::class, 'store'])->name('locations.store');

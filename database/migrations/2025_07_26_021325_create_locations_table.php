@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('address'); // Alamat lokasi
             $table->string('postal_code')->nullable();
             $table->text('description')->nullable(); // Deskripsi tambahan
-            $table->decimal('latitude', 10, 8)->nullable(); // Latitude untuk lokasi
-            $table->decimal('longitude', 11, 8)->nullable(); // Longitude
+            $table->string('latitude')->nullable(); // Latitude untuk lokasi
+            $table->string('longitude')->nullable(); // Longitude
             $table->timestamps();
         });
     }

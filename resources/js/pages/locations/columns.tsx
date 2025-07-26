@@ -1,10 +1,13 @@
 'use client';
 
 import DeleteAlertModal from '@/components/DeleteAlertModal';
+import { Button } from '@/components/ui/button';
 // import EditLocationFormModal from '@/components/EditLocationFormModal';
 import { Location } from '@/types';
+import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
+import { Pencil } from 'lucide-react';
 
 export const columns: ColumnDef<Location>[] = [
     {
@@ -18,7 +21,7 @@ export const columns: ColumnDef<Location>[] = [
         cell: ({ getValue }) => getValue(),
     },
     {
-        accessorKey: 'location_type.name',
+        accessorKey: 'type.name',
         header: 'Tipe Lokasi',
         cell: ({ getValue }) => getValue(),
     },
@@ -43,6 +46,11 @@ export const columns: ColumnDef<Location>[] = [
         enableSorting: false,
         cell: ({ row }) => (
             <div className="flex items-center space-x-2">
+                <Button variant="secondary" size={'icon'} asChild>
+                    <Link href={route('locations.edit', row.original.id)} className="flex items-center gap-2">
+                        <Pencil />
+                    </Link>
+                </Button>
                 <DeleteAlertModal id={row.original.id} routeKey={'locations.destroy'} />
             </div>
         ),

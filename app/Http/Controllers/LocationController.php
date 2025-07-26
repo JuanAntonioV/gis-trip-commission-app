@@ -29,10 +29,15 @@ class LocationController extends Controller
 
     public function show($id)
     {
+        return redirect()->route('locations.edit', $id);
+    }
+
+    public function edit($id)
+    {
         $location = \App\Models\Location::with('type')->findOrFail($id);
         $locationTypes = \App\Models\LocationType::all();
 
-        return Inertia::render('locations/LocationDetailPage', [
+        return Inertia::render('locations/EditLocationPage', [
             'location' => $location,
             'locationTypes' => $locationTypes,
         ]);
