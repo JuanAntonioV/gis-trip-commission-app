@@ -52,7 +52,7 @@ class LocationController extends Controller
 
         $location = \App\Models\Location::create($request->all());
 
-        $location->locationType()->associate($request->location_type_id);
+        $location->type()->associate($request->input('location_type_id'));
         $location->save();
 
         return redirect()->route('locations.index')->with('success', 'Location created successfully.');
