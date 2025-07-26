@@ -16,7 +16,7 @@ type FormType = {
 const AddLocationTypeFormModal = () => {
     const [open, setOpen] = useState(false);
 
-    const { data, setData, post, errors, processing, recentlySuccessful } = useForm<Required<FormType>>({
+    const { data, setData, post, errors, processing, recentlySuccessful, resetAndClearErrors } = useForm<Required<FormType>>({
         name: '',
         description: '',
     });
@@ -29,6 +29,7 @@ const AddLocationTypeFormModal = () => {
             onSuccess: () => {
                 setOpen(false);
                 toast.success('Tipe lokasi berhasil ditambahkan');
+                resetAndClearErrors();
             },
             onError: () => {
                 toast.error('Gagal menambahkan tipe lokasi');

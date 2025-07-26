@@ -21,7 +21,7 @@ type VehicleForm = {
 const AddVehicleFormModal = () => {
     const [open, setOpen] = useState(false);
 
-    const { data, setData, post, errors, processing, recentlySuccessful } = useForm<Required<VehicleForm>>({
+    const { data, setData, post, errors, processing, recentlySuccessful, resetAndClearErrors } = useForm<Required<VehicleForm>>({
         name: '',
         type: '',
         license_plate: '',
@@ -37,6 +37,7 @@ const AddVehicleFormModal = () => {
             onSuccess: () => {
                 setOpen(false);
                 toast.success('Kendaraan berhasil ditambahkan');
+                resetAndClearErrors();
             },
             onError: () => {
                 toast.error('Gagal menambahkan kendaraan');
