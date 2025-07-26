@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class HasAdminRegistered
+class NoAdminRegistered
 {
     /**
      * Handle an incoming request.
@@ -17,8 +17,8 @@ class HasAdminRegistered
     {
         $alreadyRegistered = \App\Models\User::role('super admin')->exists();
 
-        if ($alreadyRegistered) {
-            return redirect()->route('login');
+        if (!$alreadyRegistered) {
+            return redirect()->route('register');
         }
 
         return $next($request);

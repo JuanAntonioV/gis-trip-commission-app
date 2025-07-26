@@ -35,7 +35,7 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()->min(6)],
         ]);
 
         $formatedPhone = Formatter::formatPhoneNumber($request->phone);
@@ -51,6 +51,8 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'joined_at' => now(),
         ]);
+
+        $user->assignRole('super admin');
 
         event(new Registered($user));
 
