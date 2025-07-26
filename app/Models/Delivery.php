@@ -21,6 +21,11 @@ class Delivery extends Model
         'cancel_reason',
     ];
 
+    public function items()
+    {
+        return $this->hasMany(DeliveryItem::class);
+    }
+
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);

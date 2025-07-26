@@ -34,6 +34,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/{location}', [\App\Http\Controllers\LocationController::class, 'update'])->name('locations.update');
         Route::delete('/{location}', [\App\Http\Controllers\LocationController::class, 'destroy'])->name('locations.destroy');
     });
+
+    Route::get('/kelola-pengiriman', [\App\Http\Controllers\DeliveryController::class, 'index'])->name('deliveries.index');
+    Route::get('/kelola-pengiriman/buat', [\App\Http\Controllers\DeliveryController::class, 'create'])->name('deliveries.create');
+    Route::get('/kelola-pengiriman/{delivery}', [\App\Http\Controllers\DeliveryController::class, 'show'])->name('deliveries.show');
+
+    Route::prefix('deliveries')->group(function () {
+        Route::post('/', [\App\Http\Controllers\DeliveryController::class, 'store'])->name('deliveries.store');
+        Route::put('/{delivery}/cancel', [\App\Http\Controllers\DeliveryController::class, 'cancel'])->name('deliveries.cancel');
+    });
 });
 
 require __DIR__ . '/settings.php';
