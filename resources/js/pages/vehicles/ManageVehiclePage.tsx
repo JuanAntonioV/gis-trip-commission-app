@@ -2,16 +2,9 @@ import AddVehicleFormModal from '@/components/AddVehicleFormModal';
 import { DataTable } from '@/components/DataTable';
 import Heading from '@/components/heading';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem, Vehicle } from '@/types';
+import { Vehicle } from '@/types';
 import { Head } from '@inertiajs/react';
 import { columns } from './columns';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Kelola Kendaraan',
-        href: '/kelola-kendaraan',
-    },
-];
 
 type Props = {
     vehicles: Vehicle[];
@@ -19,7 +12,7 @@ type Props = {
 
 const ManageVehiclePage = ({ vehicles }: Props) => {
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout>
             <Head title="Kelola Kendaraan" />
 
             <main className="p-6">

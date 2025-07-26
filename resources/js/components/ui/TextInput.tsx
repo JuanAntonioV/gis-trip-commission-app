@@ -13,7 +13,7 @@ type Props = {
 const TextInput = ({ value, onChange, label, placeholder, errors, ...props }: Props) => {
     return (
         <div className="grid gap-2">
-            <Label htmlFor="email">{label}</Label>
+            <Label >{label}</Label>
 
             <Input
                 type="text"

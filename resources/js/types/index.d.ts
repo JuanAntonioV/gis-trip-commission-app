@@ -62,3 +62,29 @@ export type LocationType = {
     name: string;
     description?: string | null;
 };
+
+export type Location = {
+    id: number;
+    location_type_id: number;
+    name: string;
+    address: string;
+    postal_code?: string | null;
+    description?: string | null;
+    latitude?: number | null; // Latitude for the location
+    longitude?: number | null; // Longitude for the location
+    created_at: Date;
+    updated_at: Date;
+    location_type?: LocationType; // Optional relationship to LocationType
+};
+
+interface TGeoLocation {
+    loaded: boolean;
+    coordinates?: {
+        lat: number;
+        lng: number;
+    };
+    error?: {
+        code: number;
+        message: string;
+    } | null;
+}

@@ -23,6 +23,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/{locationType}', [\App\Http\Controllers\LocationTypeController::class, 'update'])->name('location-types.update');
         Route::delete('/{locationType}', [\App\Http\Controllers\LocationTypeController::class, 'destroy'])->name('location-types.destroy');
     });
+
+    Route::get('/kelola-lokasi', [\App\Http\Controllers\LocationController::class, 'index'])->name('locations.index');
+    Route::get('/kelola-lokasi/buat', [\App\Http\Controllers\LocationController::class, 'create'])->name('locations.create');
+    Route::get('/kelola-lokasi/{location}', [\App\Http\Controllers\LocationController::class, 'show'])->name('locations.show');
+
+    Route::prefix('locations')->group(function () {
+        Route::post('/', [\App\Http\Controllers\LocationController::class, 'store'])->name('locations.store');
+        Route::put('/{location}', [\App\Http\Controllers\LocationController::class, 'update'])->name('locations.update');
+        Route::delete('/{location}', [\App\Http\Controllers\LocationController::class, 'destroy'])->name('locations.destroy');
+    });
 });
 
 require __DIR__ . '/settings.php';
