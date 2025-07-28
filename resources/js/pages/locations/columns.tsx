@@ -1,5 +1,3 @@
-'use client';
-
 import DeleteAlertModal from '@/components/DeleteAlertModal';
 import { Button } from '@/components/ui/button';
 // import EditLocationFormModal from '@/components/EditLocationFormModal';

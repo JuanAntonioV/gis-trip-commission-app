@@ -2,17 +2,15 @@ import { DataTable } from '@/components/DataTable';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
-import { Location, LocationType } from '@/types';
+import { Location } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 import { columns } from './columns';
 
 type Props = {
     locations: Location[];
-    locationTypes: LocationType[];
 };
 const ManageLocationPage = ({ locations }: Props) => {
-    console.log('🚀 ~ ManageLocationPage ~ locations:', locations);
     return (
         <AppLayout>
             <Head title="Kelola Lokasi" />

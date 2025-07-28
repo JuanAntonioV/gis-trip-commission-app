@@ -88,3 +88,37 @@ interface TGeoLocation {
         message: string;
     } | null;
 }
+
+export type DeliveryStatus = {
+    id: number;
+    name: string;
+};
+
+export type DeliveryItem = {
+    id: number;
+    delivery_id: number;
+    location_id: number;
+    weight: number;
+};
+
+export type Delivery = {
+    id: number;
+    total_items: number;
+    vehicle_id: number;
+    driver_id: number;
+    helper_id?: number | null;
+    scheduled_at: string; // ISO date string
+    started_at?: string | null; // ISO date string
+    finished_at?: string | null; // ISO date string
+    confirmed_at?: string | null; // ISO date string
+    status: DeliveryStatus;
+    created_by: number;
+    cancelled_by?: number | null;
+    cancelled_at?: string | null; // ISO date string
+    cancel_reason?: string | null;
+    items: DeliveryItem[];
+    vehicle?: Vehicle; // Optional relationship to Vehicle
+    driver?: User; // Optional relationship to User (driver)
+    helper?: User | null; // Optional relationship to User (helper)
+    created_by: User; // Relationship to User who created the delivery
+};

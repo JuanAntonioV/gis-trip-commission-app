@@ -17,7 +17,7 @@ class DeliveryController extends Controller
             ->get();
 
         return Inertia::render('deliveries/ManageDeliveryPage', [
-            'deliveries' => $deliveries,
+            'deliveries' => Inertia::defer(fn() => $deliveries),
         ]);
     }
 
@@ -26,11 +26,13 @@ class DeliveryController extends Controller
         $vehicles = \App\Models\Vehicle::all();
         $drivers = \App\Models\User::role('driver')->get();
         $helpers = \App\Models\User::role('helper')->get();
+        $locations = \App\Models\Location::all();
 
         return Inertia::render('deliveries/CreateDeliveryPage', [
             'vehicles' => $vehicles,
             'drivers' => $drivers,
             'helpers' => $helpers,
+            'locations' => $locations,
         ]);
     }
 

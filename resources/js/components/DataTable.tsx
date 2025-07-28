@@ -15,6 +15,7 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import useDebounce from '@/hooks/useDebounce';
 import { cn, valueUpdater } from '@/lib/utils';
+import { Deferred } from '@inertiajs/react';
 import { compareItems, RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
 import { ColumnFiltersState, FilterFn, GlobalFilterTableState, SortingFn, SortingState } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
@@ -30,11 +31,13 @@ interface DataTableProps<TData, TValue> {
     leftHeaderSection?: React.ReactNode; // Optional left header section
     rightHeaderSection?: React.ReactNode; // Optional right header section
     loading?: boolean; // Optional loading state
+    dataKey?: string | string[]; // Optional key for data identification
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    dataKey,
     primaryKey = 'id',
     leftHeaderSection,
     rightHeaderSection,
@@ -179,37 +182,50 @@ export function DataTable<TData, TValue>({
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {loading ? (
-                            <TableRow>
-                                <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
-                                    Loading...
-                                </TableCell>
-                            </TableRow>
-                        ) : table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                                    {row.getVisibleCells().map((cell) => {
-                                        const meta = cell.column.columnDef.meta as ColumnMeta<TData, TValue>;
-
-                                        return (
-                                            <TableCell
-                                                key={cell.id}
-                                                className={cn('whitespace-nowrap')}
-                                                style={{ paddingLeft: meta?.ps || '1.25rem' }}
-                                            >
-                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                            </TableCell>
-                                        );
-                                    })}
+                        <Deferred
+                            data={dataKey || ''}
+                            fallback={
+                                <TableRow>
+                                    <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
+                                        Loading...
+                                    </TableCell>
                                 </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    Tidak ada data yang ditemukan.
-                                </TableCell>
-                            </TableRow>
-                        )}
+                            }
+                        >
+                            <>
+                                {loading ? (
+                                    <TableRow>
+                                        <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
+                                            Loading...
+                                        </TableCell>
+                                    </TableRow>
+                                ) : table.getRowModel().rows?.length ? (
+                                    table.getRowModel().rows.map((row) => (
+                                        <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                                            {row.getVisibleCells().map((cell) => {
+                                                const meta = cell.column.columnDef.meta as ColumnMeta<TData, TValue>;
+
+                                                return (
+                                                    <TableCell
+                                                        key={cell.id}
+                                                        className={cn('whitespace-nowrap')}
+                                                        style={{ paddingLeft: meta?.ps || '1.25rem' }}
+                                                    >
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </TableCell>
+                                                );
+                                            })}
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={columns.length} className="h-24 text-center">
+                                            Tidak ada data yang ditemukan.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </>
+                        </Deferred>
                     </TableBody>
                 </Table>
             </div>
