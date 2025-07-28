@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 class Delivery extends Model
 {
     protected $fillable = [
+        'id',
         'vehicle_id',
         'driver_id',
         'helper_id',
@@ -23,7 +24,8 @@ class Delivery extends Model
         'cancel_reason',
     ];
     protected $keyType = 'string';
-    protected $guarded = ['sales_id'];
+    protected $primaryKey = 'id';
+    protected $guarded = ['id'];
 
     public static function generateId()
     {
