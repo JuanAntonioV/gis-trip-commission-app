@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Delivery extends Model
 {
@@ -20,6 +22,15 @@ class Delivery extends Model
         'cancelled_at',
         'cancel_reason',
     ];
+    protected $keyType = 'string';
+    protected $guarded = ['sales_id'];
+
+    public static function generateId()
+    {
+        $datePart = Carbon::now()->format('ymd');
+        $randomPart = strtoupper(Str::random(5));
+        return strtoupper("D-{$datePart}-{$randomPart}");
+    }
 
     public function items()
     {

@@ -18,6 +18,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import TextInput from '../ui/TextInput';
 
 type FormType = {
+    id: string | null;
     vehicle_id: number | string;
     driver_id: number | string;
     helper_id: number | string;
@@ -35,8 +36,10 @@ const CreateDeliveryForm = () => {
     const drivers = serverProps?.drivers as User[];
     const helpers = serverProps?.helpers as User[];
     const locations = serverProps?.locations as Location[];
+    const generatedId = serverProps?.generatedId as string;
 
     const { data, setData, post, errors, processing, recentlySuccessful, resetAndClearErrors } = useForm<Required<FormType>>({
+        id: generatedId || null,
         vehicle_id: '',
         driver_id: '',
         helper_id: '',
@@ -72,6 +75,14 @@ const CreateDeliveryForm = () => {
 
     return (
         <form onSubmit={submit} className="space-y-4">
+            <TextInput
+                value={data.id || ''}
+                onChange={(value) => setData('id', value)}
+                label="ID Pengiriman"
+                placeholder="ID Pengiriman"
+                errors={errors.id}
+                autoComplete="off"
+            />
             <SelectInput
                 value={data.vehicle_id ? String(data.vehicle_id) : ''}
                 onChange={(value) => setData('vehicle_id', Number(value))}

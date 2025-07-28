@@ -28,8 +28,10 @@ class DeliveryController extends Controller
         $drivers = \App\Models\User::role('driver')->get();
         $helpers = \App\Models\User::role('helper')->get();
         $locations = \App\Models\Location::all();
+        $generatedId = \App\Models\Delivery::generateId();
 
         return Inertia::render('deliveries/CreateDeliveryPage', [
+            'generatedId' => $generatedId,
             'vehicles' => $vehicles,
             'drivers' => $drivers,
             'helpers' => $helpers,
@@ -50,6 +52,7 @@ class DeliveryController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+            'id' => 'nullable|string',
             'vehicle_id' => 'required|exists:vehicles,id',
             'driver_id' => 'required|exists:users,id',
             'helper_id' => 'nullable|exists:users,id',
@@ -63,6 +66,10 @@ class DeliveryController extends Controller
         $data['created_by'] = Auth::id();
         $data['status'] = DeliveryStatusEntities::PENDING;
         $data['scheduled_at'] = $data['scheduled_at'] ? Carbon::parse($data['scheduled_at'])->toDateTimeString() : null;
+
+        if (!isset($data['id'])) {
+            $data['id'] = \App\Models\Delivery::generateId();
+        }
 
         // check vehicle availability at the scheduled time
         $vehicle = \App\Models\Vehicle::findOrFail($data['vehicle_id']);
