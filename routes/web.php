@@ -51,7 +51,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('employees')->group(function () {
         Route::post('/', [\App\Http\Controllers\EmployeeController::class, 'store'])->name('employees.store');
         Route::put('/{employee}', [\App\Http\Controllers\EmployeeController::class, 'update'])->name('employees.update');
-        Route::delete('/{employee}', [\App\Http\Controllers\EmployeeController::class, 'destroy'])->name('employees.destroy');
+        Route::put('/{employee}/change-password', [\App\Http\Controllers\EmployeeController::class, 'changePassword'])->name('employees.change-password')
+            ->middleware('password.confirm');
+        Route::delete('/{employee}', [\App\Http\Controllers\EmployeeController::class, 'destroy'])->name('employees.destroy')
+            ->middleware('password.confirm');
     });
 });
 

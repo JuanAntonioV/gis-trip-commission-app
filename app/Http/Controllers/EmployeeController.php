@@ -66,4 +66,74 @@ class EmployeeController extends Controller
         // Logic to store the new employee
         return redirect()->route('employees.index')->with('success', 'Employee created successfully.');
     }
+
+    public function edit($id)
+    {
+        $employee = User::with('roles', 'permissions')->findOrFail($id);
+        $roles = Role::with('permissions')->get();
+        $permissions = Permission::all();
+
+        // Logic to show the form for editing an existing employee
+        return Inertia::render('employees/EditEmployeePage', [
+            'employee' => $employee,
+            'roles' => $roles,
+            'permissions' => $permissions,
+        ]);
+    }
+
+    public function update(Request $request, User $employee)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $employee->id,
+            'phone' => 'nullable|string|max:15',
+            'address' => 'nullable|string|max:255',
+            'married' => 'boolean',
+            'joined_at' => 'required|date',
+            'birth_date' => 'nullable|date',
+            'role_id' => 'required|exists:roles,id',
+        ]);
+
+        $employee->update([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'address' => $data['address'],
+            'married' => $data['married'],
+            'joined_at' => Carbon::parse($data['joined_at'])->toDateString(),
+            'birth_date' => Carbon::parse($data['birth_date'])->toDateString(),
+        ]);
+
+        $employee->syncRoles([$data['role_id']]);
+
+        // Logic to update the existing employee
+        return redirect()->route('employees.edit', $employee->id)->with('success', 'Employee updated successfully.');
+    }
+
+    public function changePassword(Request $request, User $employee)
+    {
+        $data = $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:6|confirmed',
+        ]);
+
+        if (!Hash::check($data['current_password'], $employee->password)) {
+            return redirect()->back()->withErrors(['current_password' => 'Current password is incorrect.']);
+        }
+
+        $employee->password = Hash::make($data['new_password']);
+        $employee->save();
+
+        // Logic to change the employee's password
+        return redirect()->route('employees.index')->with('success', 'Password changed successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $employee = User::findOrFail($id);
+        // Logic to delete an employee
+        $employee->delete();
+
+        return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
+    }
 }
