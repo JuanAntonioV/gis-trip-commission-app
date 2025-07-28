@@ -122,3 +122,20 @@ export type Delivery = {
     helper?: User | null; // Optional relationship to User (helper)
     created_by: User; // Relationship to User who created the delivery
 };
+
+export type Permission = {
+    id: number;
+    name: string;
+    guard_name: string;
+    created_at: string;
+    updated_at: string;
+};
+
+export type Role = {
+    id: number;
+    name: string;
+    guard_name: string;
+    created_at: string;
+    updated_at: string;
+    permissions?: Permission[]; // Optional relationship to Permissions
+};

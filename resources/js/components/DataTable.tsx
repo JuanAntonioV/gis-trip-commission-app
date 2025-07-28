@@ -182,16 +182,52 @@ export function DataTable<TData, TValue>({
                         ))}
                     </TableHeader>
                     <TableBody>
-                        <Deferred
-                            data={dataKey || ''}
-                            fallback={
-                                <TableRow>
-                                    <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
-                                        Loading...
-                                    </TableCell>
-                                </TableRow>
-                            }
-                        >
+                        {dataKey ? (
+                            <Deferred
+                                data={dataKey || ''}
+                                fallback={
+                                    <TableRow>
+                                        <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
+                                            Loading...
+                                        </TableCell>
+                                    </TableRow>
+                                }
+                            >
+                                <>
+                                    {loading ? (
+                                        <TableRow>
+                                            <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
+                                                Loading...
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : table.getRowModel().rows?.length ? (
+                                        table.getRowModel().rows.map((row) => (
+                                            <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                                                {row.getVisibleCells().map((cell) => {
+                                                    const meta = cell.column.columnDef.meta as ColumnMeta<TData, TValue>;
+
+                                                    return (
+                                                        <TableCell
+                                                            key={cell.id}
+                                                            className={cn('whitespace-nowrap')}
+                                                            style={{ paddingLeft: meta?.ps || '1.25rem' }}
+                                                        >
+                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={columns.length} className="h-24 text-center">
+                                                Tidak ada data yang ditemukan.
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </>
+                            </Deferred>
+                        ) : (
                             <>
                                 {loading ? (
                                     <TableRow>
@@ -225,7 +261,7 @@ export function DataTable<TData, TValue>({
                                     </TableRow>
                                 )}
                             </>
-                        </Deferred>
+                        )}
                     </TableBody>
                 </Table>
             </div>

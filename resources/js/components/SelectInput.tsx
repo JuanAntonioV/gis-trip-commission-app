@@ -21,7 +21,7 @@ const SelectInput = ({ value, onChange, label, placeholder, errors, data, ...pro
         <div className="grid gap-2">
             <Label>{label}</Label>
             <Select value={value} onValueChange={onChange} {...props}>
-                <SelectTrigger>
+                <SelectTrigger className="capitalize">
                     <SelectValue placeholder={placeholder || 'Pilih salah satu'} />
                 </SelectTrigger>
                 <SelectContent>
@@ -29,7 +29,7 @@ const SelectInput = ({ value, onChange, label, placeholder, errors, data, ...pro
                         {placeholder || 'Pilih salah satu'}
                     </SelectItem>
                     {data.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
+                        <SelectItem key={option.value} value={option.value} className="capitalize">
                             {option.label}
                         </SelectItem>
                     ))}
