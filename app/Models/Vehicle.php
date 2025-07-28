@@ -18,4 +18,9 @@ class Vehicle extends Model
         'capacity' => 'integer',
         'available' => 'boolean',
     ];
+
+    public function deliveries()
+    {
+        return $this->hasMany(Delivery::class);
+    }
 }

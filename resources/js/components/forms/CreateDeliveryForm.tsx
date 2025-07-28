@@ -6,21 +6,24 @@ import { X } from 'lucide-react';
 import { FormEventHandler } from 'react';
 import { toast } from 'sonner';
 import HeadingSmall from '../heading-small';
+import InputError from '../input-error';
 import SelectInput from '../SelectInput';
 import { Button } from '../ui/button';
 import DatePickerInput from '../ui/datepicker-input';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 import NumberInput from '../ui/NumberInput';
 import { Separator } from '../ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import TextInput from '../ui/TextInput';
 
 type FormType = {
-    vehicle_id: number;
-    driver_id: number;
-    helper_id: number;
+    vehicle_id: number | string;
+    driver_id: number | string;
+    helper_id: number | string;
     scheduled_at: Date | null;
     items: {
-        location_id: number;
+        location_id: number | string;
         invoice_number: string | null;
         weight: number;
     }[];
@@ -34,13 +37,13 @@ const CreateDeliveryForm = () => {
     const locations = serverProps?.locations as Location[];
 
     const { data, setData, post, errors, processing, recentlySuccessful, resetAndClearErrors } = useForm<Required<FormType>>({
-        vehicle_id: 0,
-        driver_id: 0,
-        helper_id: 0,
+        vehicle_id: '',
+        driver_id: '',
+        helper_id: '',
         scheduled_at: dayjs().add(1, 'day').toDate() as Date | null,
         items: [
             {
-                location_id: 0,
+                location_id: '',
                 invoice_number: '',
                 weight: 0,
             },
@@ -96,12 +99,41 @@ const CreateDeliveryForm = () => {
                 />
             </div>
 
-            <DatePickerInput
-                label="Jadwal Pengiriman"
-                value={data.scheduled_at ? dayjs(data.scheduled_at).toDate() : undefined}
-                onChange={(date) => setData('scheduled_at', date ? dayjs(date).toDate() : null)}
-                errors={errors.scheduled_at}
-            />
+            <div className="flex w-full gap-3">
+                <DatePickerInput
+                    wrapperClassName="w-full"
+                    label="Jadwal Pengiriman"
+                    value={data.scheduled_at ? dayjs(data.scheduled_at).toDate() : undefined}
+                    onChange={(date) => setData('scheduled_at', date ? dayjs(date).toDate() : null)}
+                    errors={errors.scheduled_at}
+                />
+
+                <div className="flex w-full flex-col gap-2">
+                    <Label htmlFor="time-picker" className="px-1">
+                        Waktu Pengiriman
+                    </Label>
+                    <Input
+                        type="time"
+                        id="time-picker"
+                        step="1"
+                        defaultValue="09:00:00"
+                        onChange={(e) => {
+                            const time = e.target.value;
+                            const date = data.scheduled_at ? dayjs(data.scheduled_at) : dayjs();
+                            const newDate = date
+                                .hour(Number(time.split(':')[0]))
+                                .minute(Number(time.split(':')[1]))
+                                .toDate();
+                            setData('scheduled_at', newDate);
+                        }}
+                        value={data.scheduled_at ? dayjs(data.scheduled_at).format('HH:mm') : ''}
+                        placeholder="HH:mm"
+                        autoComplete="off"
+                        className="appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                    />
+                    <InputError className="mt-2" message={errors.scheduled_at} />
+                </div>
+            </div>
 
             <Separator className="my-6" />
 

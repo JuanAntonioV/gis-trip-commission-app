@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import { ChevronDownIcon } from 'lucide-react';
 import { useState } from 'react';
 import InputError from '../input-error';
+import { cn } from '@/lib/utils';
 
 type Props = {
     value: Date | undefined;
@@ -13,9 +14,10 @@ type Props = {
     label?: string;
     placeholder?: string;
     errors?: string;
+    wrapperClassName?: string;
 };
 
-const DatePickerInput = ({ value, onChange, label, placeholder, errors }: Props) => {
+const DatePickerInput = ({ value, onChange, label, placeholder, errors, wrapperClassName }: Props) => {
     const [open, setOpen] = useState(false);
     const [date, setDate] = useState<Date | undefined>(value);
 
@@ -26,7 +28,7 @@ const DatePickerInput = ({ value, onChange, label, placeholder, errors }: Props)
     };
 
     return (
-        <div className="grid gap-2">
+        <div className={cn("grid gap-2", wrapperClassName)}>
             <Label htmlFor="date" className="px-1">
                 {label}
             </Label>

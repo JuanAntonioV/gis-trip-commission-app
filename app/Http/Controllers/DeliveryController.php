@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entities\DeliveryStatusEntities;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -55,12 +56,59 @@ class DeliveryController extends Controller
             'scheduled_at' => 'required|date',
             'items' => 'required|array',
             'items.*.location_id' => 'required|exists:locations,id',
-            'items.*.invoice_number' => 'required|string|max:255',
-            'items.*.weight' => 'required|numeric',
+            'items.*.invoice_number' => 'nullable|string|max:255',
+            'items.*.weight' => 'nullable|numeric|min:0',
         ]);
 
         $data['created_by'] = Auth::id();
         $data['status'] = DeliveryStatusEntities::PENDING;
+        $data['scheduled_at'] = $data['scheduled_at'] ? Carbon::parse($data['scheduled_at'])->toDateTimeString() : null;
+
+        // check vehicle availability at the scheduled time
+        $vehicle = \App\Models\Vehicle::findOrFail($data['vehicle_id']);
+        $isAvailable = $vehicle->deliveries()
+            ->where('status', DeliveryStatusEntities::PENDING)
+            ->where(function ($query) use ($data) {
+                $query->whereBetween('scheduled_at', [
+                    Carbon::parse($data['scheduled_at'])->startOfDay(),
+                    Carbon::parse($data['scheduled_at'])->endOfDay(),
+                ]);
+            })->doesntExist();
+
+        if (!$isAvailable) {
+            return redirect()->back()->withErrors(['vehicle_id' => 'Vehicle is not available at the scheduled time.']);
+        }
+
+        // check driver availability at the scheduled time
+        $driver = \App\Models\User::findOrFail($data['driver_id']);
+        $isDriverAvailable = $driver->deliveries()
+            ->where('status', DeliveryStatusEntities::PENDING)
+            ->where(function ($query) use ($data) {
+                $query->whereBetween('scheduled_at', [
+                    Carbon::parse($data['scheduled_at'])->startOfDay(),
+                    Carbon::parse($data['scheduled_at'])->endOfDay(),
+                ]);
+            })->doesntExist();
+
+        if (!$isDriverAvailable) {
+            return redirect()->back()->withErrors(['driver_id' => 'Driver is not available at the scheduled time.']);
+        }
+
+        // check helper availability at the scheduled time
+        if (isset($data['helper_id'])) {
+            $helper = \App\Models\User::findOrFail($data['helper_id']);
+            $isHelperAvailable = $helper->deliveries()
+                ->where('status', DeliveryStatusEntities::PENDING)
+                ->where(function ($query) use ($data) {
+                    $query->whereBetween('scheduled_at', [
+                        Carbon::parse($data['scheduled_at'])->startOfDay(),
+                        Carbon::parse($data['scheduled_at'])->endOfDay(),
+                    ]);
+                })->doesntExist();
+            if (!$isHelperAvailable) {
+                return redirect()->back()->withErrors(['helper_id' => 'Helper is not available at the scheduled time.']);
+            }
+        }
 
         $delivery = \App\Models\Delivery::create($data);
 
