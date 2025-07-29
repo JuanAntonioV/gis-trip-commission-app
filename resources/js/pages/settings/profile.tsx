@@ -52,18 +52,18 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
     return (
         <AppLayout>
-            <Head title="Profile settings" />
+            <Head title="Pengaturan profil" />
 
             <SettingsLayout>
                 <div className="space-y-6">
-                    <HeadingSmall title="Profile information" description="Update your name and email address" />
+                    <HeadingSmall title="Informasi profil" description="Perbarui nama dan alamat email Anda" />
 
                     <form onSubmit={submit} className="space-y-6">
                         <TextInput
                             value={data.name}
                             onChange={(value) => setData('name', value as string)}
-                            label="Name"
-                            placeholder="Your name"
+                            label="Nama Lengkap"
+                            placeholder="Nama lengkap Anda"
                             errors={errors.name}
                             autoComplete="name"
                         />
@@ -71,7 +71,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                         <TextInput
                             value={data.email}
                             onChange={(value) => setData('email', value as string)}
-                            label="Email"
+                            label="Alamat Email"
                             placeholder="example@email.com"
                             errors={errors.email}
                             type="email"
@@ -88,8 +88,8 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                             <NumberInput
                                 value={data.phone}
                                 onChange={(value) => setData('phone', value as string)}
-                                label="Phone"
-                                placeholder="Your phone number"
+                                label="Nomor Telepon"
+                                placeholder="0812-3456-7890"
                                 errors={errors.phone}
                                 autoComplete="tel"
                             />
@@ -136,8 +136,8 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                         <TextareaInput
                             value={data.address}
                             onChange={(value) => setData('address', value as string)}
-                            label="Address"
-                            placeholder="Your address"
+                            label="Alamat Lengkap"
+                            placeholder="Alamat lengkap Anda"
                             errors={errors.address}
                             rows={3}
                         />

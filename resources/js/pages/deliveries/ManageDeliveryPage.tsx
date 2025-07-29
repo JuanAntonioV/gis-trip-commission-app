@@ -20,20 +20,18 @@ const ManageDeliveryPage = ({ deliveries }: Props) => {
                 <Heading title="Kelola Pengiriman Barang" description="Halaman ini digunakan untuk mengelola pengiriman barang." />
 
                 <section className="section">
-                    <section className="section">
-                        <DataTable
-                            data={deliveries}
-                            columns={columns}
-                            leftHeaderSection={
-                                <Button variant={'secondary'} asChild>
-                                    <Link href={route('deliveries.create')} className="flex items-center gap-2">
-                                        <Plus />
-                                        Buat baru
-                                    </Link>
-                                </Button>
-                            }
-                        />
-                    </section>
+                    <DataTable
+                        data={deliveries}
+                        columns={columns}
+                        leftHeaderSection={
+                            <Button variant={'secondary'} asChild>
+                                <Link href={route('deliveries.create')} className="flex items-center gap-2">
+                                    <Plus />
+                                    Buat baru
+                                </Link>
+                            </Button>
+                        }
+                    />
                 </section>
             </main>
         </AppLayout>

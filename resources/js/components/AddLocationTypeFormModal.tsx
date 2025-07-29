@@ -55,8 +55,8 @@ const AddLocationTypeFormModal = () => {
                     <TextInput
                         value={data.name}
                         onChange={(value) => setData('name', value as string)}
-                        label="Nama Kendaraan"
-                        placeholder="Contoh: Toyota Avanza"
+                        label="Nama Tipe Lokasi"
+                        placeholder="Contoh: SPBU, Rest Area, dll."
                         errors={errors.name}
                         autoComplete="name"
                     />
@@ -64,8 +64,8 @@ const AddLocationTypeFormModal = () => {
                     <TextareaInput
                         value={data.description}
                         onChange={(value) => setData('description', value as string)}
-                        label="Deskripsi"
-                        placeholder="Deskripsi tipe lokasi"
+                        label="Keterangan"
+                        placeholder="Keterangan tipe lokasi"
                         errors={errors.description}
                         autoComplete="description"
                     />
