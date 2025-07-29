@@ -41,12 +41,16 @@ class DeliveryController extends Controller
 
     public function show($id)
     {
+        $userRole = Auth::user()->roles->first()->name;
+        $isAdmin = $userRole === 'admin' || $userRole === 'super admin';
+
         $delivery = \App\Models\Delivery::with(['vehicle', 'driver', 'helper', 'status', 'items.location', 'staff', 'cancelledStaff'])
             ->withCount('items as total_items')
             ->findOrFail($id);
 
         return Inertia::render('deliveries/DeliveryDetailPage', [
             'delivery' => $delivery,
+            'isAdmin' => $isAdmin,
         ]);
     }
 

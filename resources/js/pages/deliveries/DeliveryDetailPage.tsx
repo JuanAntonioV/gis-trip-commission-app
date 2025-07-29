@@ -15,6 +15,7 @@ import dayjs from 'dayjs';
 const DeliveryDetailPage = () => {
     const serverProps = usePage().props;
     const delivery = serverProps.delivery as Delivery;
+    const isAdmin = (serverProps.isAdmin as boolean) || false;
 
     return (
         <AppLayout>
@@ -104,12 +105,13 @@ const DeliveryDetailPage = () => {
                         </TableBody>
                     </Table>
 
-                    {(delivery.status.id === DELIVERY_STATUSES.DELIVERY_STATUS_PENDING ||
-                        delivery.status.id === DELIVERY_STATUSES.DELIVERY_STATUS_IN_PROGRESS) && (
-                        <div className="flex items-center gap-4">
-                            <CancelDeliveryButton id={delivery.id} />
-                        </div>
-                    )}
+                    {isAdmin &&
+                        (delivery.status.id === DELIVERY_STATUSES.DELIVERY_STATUS_PENDING ||
+                            delivery.status.id === DELIVERY_STATUSES.DELIVERY_STATUS_IN_PROGRESS) && (
+                            <div className="flex items-center gap-4">
+                                <CancelDeliveryButton id={delivery.id} />
+                            </div>
+                        )}
                 </section>
             </main>
         </AppLayout>
