@@ -41,6 +41,7 @@ const DeleteAlertModal = ({ id, routeKey, title, description, onSuccess, onError
                 // Handle error, e.g., show a toast notification
                 toast.error('Data gagal dihapus');
                 onError?.();
+                setOpen(false);
             },
         });
     };

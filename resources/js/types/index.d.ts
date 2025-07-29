@@ -98,13 +98,15 @@ export type DeliveryStatus = {
 
 export type DeliveryItem = {
     id: number;
-    delivery_id: number;
+    delivery_id: string;
     location_id: number;
+    invoice_number: string | null;
     weight: number;
+    location: Location; // Relationship to Location
 };
 
 export type Delivery = {
-    id: number;
+    id: string;
     total_items: number;
     vehicle_id: number;
     driver_id: number;
@@ -115,6 +117,7 @@ export type Delivery = {
     confirmed_at?: string | null; // ISO date string
     status: DeliveryStatus;
     created_by: number;
+    staff: User; // Relationship to User who created the delivery
     cancelled_by?: number | null;
     cancelled_at?: string | null; // ISO date string
     cancel_reason?: string | null;
@@ -122,7 +125,8 @@ export type Delivery = {
     vehicle?: Vehicle; // Optional relationship to Vehicle
     driver?: User; // Optional relationship to User (driver)
     helper?: User | null; // Optional relationship to User (helper)
-    created_by: User; // Relationship to User who created the delivery
+    created_at: Date;
+    cancelledStaff?: User; // Optional relationship to User who cancelled the delivery
 };
 
 export type Permission = {

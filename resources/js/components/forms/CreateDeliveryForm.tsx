@@ -155,7 +155,7 @@ const CreateDeliveryForm = () => {
                     <TableRow>
                         <TableHead className="w-16">Aksi</TableHead>
                         <TableHead>Lokasi</TableHead>
-                        <TableHead>Invoice Number</TableHead>
+                        <TableHead>Nomor Invoice</TableHead>
                         <TableHead>Berat (kg)</TableHead>
                     </TableRow>
                 </TableHeader>

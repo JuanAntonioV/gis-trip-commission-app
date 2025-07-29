@@ -41,7 +41,8 @@ class DeliveryController extends Controller
 
     public function show($id)
     {
-        $delivery = \App\Models\Delivery::with(['vehicle', 'driver', 'helper', 'status', 'items.location'])
+        $delivery = \App\Models\Delivery::with(['vehicle', 'driver', 'helper', 'status', 'items.location', 'staff', 'cancelledStaff'])
+            ->withCount('items as total_items')
             ->findOrFail($id);
 
         return Inertia::render('deliveries/DeliveryDetailPage', [

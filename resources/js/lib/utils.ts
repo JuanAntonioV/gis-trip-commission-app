@@ -23,3 +23,7 @@ export function getBreadcrumbs(pathname: string): BreadcrumbItem[] {
         href: '/' + parts.slice(0, index + 1).join('/'), // Construct the href for each breadcrumb
     }));
 }
+
+export function formatNumber(value: number, locale: string = 'id-ID'): string {
+    return new Intl.NumberFormat(locale).format(value);
+}

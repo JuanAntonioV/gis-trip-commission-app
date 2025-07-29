@@ -59,8 +59,13 @@ class Delivery extends Model
         return $this->belongsTo(User::class, 'helper_id');
     }
 
-    public function createdBy()
+    public function staff()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function cancelledStaff()
+    {
+        return $this->belongsTo(User::class, 'cancelled_by');
     }
 }
