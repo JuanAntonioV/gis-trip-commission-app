@@ -38,7 +38,7 @@ const EditEmployeeForm = () => {
         joined_at: employee.joined_at ? dayjs(employee.joined_at).toDate() : null,
         birth_date: employee.birth_date ? dayjs(employee.birth_date).toDate() : null,
         address: employee.address || '',
-        role_id: employee.roles ? employee.roles[0].id : 0,
+        role_id: employee.roles?.length ? employee.roles[0].id : 0,
     });
 
     const submit: FormEventHandler = (e) => {

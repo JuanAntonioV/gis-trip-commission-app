@@ -29,6 +29,8 @@ class DatabaseSeeder extends Seeder
             LocationTypeSeeder::class,
             LocationSeeder::class,
             DeliveryStatusSeeder::class,
+            TripStatusSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }
