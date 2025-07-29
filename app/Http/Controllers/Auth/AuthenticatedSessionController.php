@@ -21,7 +21,8 @@ class AuthenticatedSessionController extends Controller
         $canRegister = \App\Models\User::role('super admin')->exists();
 
         return Inertia::render('auth/login', [
-            'canResetPassword' => Route::has('password.request'),
+            // 'canResetPassword' => Route::has('password.request'),
+            'canResetPassword' => false,
             'status' => $request->session()->get('status'),
             'canRegister' => !$canRegister,
         ]);
