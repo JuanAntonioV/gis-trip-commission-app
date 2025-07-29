@@ -1,10 +1,8 @@
 import { DataTable } from '@/components/DataTable';
 import Heading from '@/components/heading';
-import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { Trip } from '@/types';
-import { Head, Link } from '@inertiajs/react';
-import { Plus } from 'lucide-react';
+import { Head } from '@inertiajs/react';
 import { columns } from './columns';
 
 type Props = {
@@ -20,18 +18,7 @@ const ManageTripPage = ({ trips }: Props) => {
                 <Heading title="Kelola Trip Pengiriman" description="Halaman ini digunakan untuk mengelola trip pengiriman." />
 
                 <section className="section">
-                    <DataTable
-                        data={trips}
-                        columns={columns}
-                        leftHeaderSection={
-                            <Button variant={'secondary'} asChild>
-                                <Link href={route('trips.create')} className="flex items-center gap-2">
-                                    <Plus />
-                                    Buat baru
-                                </Link>
-                            </Button>
-                        }
-                    />
+                    <DataTable data={trips} columns={columns} />
                 </section>
             </main>
         </AppLayout>

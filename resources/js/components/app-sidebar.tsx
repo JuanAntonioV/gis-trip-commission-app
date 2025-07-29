@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Car, LayoutGrid, LocateFixed, Map, Truck, Users, Warehouse } from 'lucide-react';
+import { Car, ChartNoAxesCombined, LayoutGrid, LocateFixed, Map, Truck, Users, Warehouse } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -42,6 +42,11 @@ const mainNavItems: NavItem[] = [
         title: 'Kelola Karyawan',
         href: '/kelola-karyawan',
         icon: Users,
+    },
+    {
+        title: 'Laporan Komisi',
+        href: '/laporan-komisi',
+        icon: ChartNoAxesCombined,
     },
 ];
 
