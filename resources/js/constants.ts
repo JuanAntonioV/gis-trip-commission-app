@@ -23,3 +23,29 @@ export const DELIVERY_STATUS_COLORS = {
     [DELIVERY_STATUS_COMPLETED]: 'bg-green-100 text-green-800',
     [DELIVERY_STATUS_CANCELLED]: 'bg-red-100 text-red-800',
 };
+
+const TRIP_STATUS_PENDING = 1;
+const TRIP_STATUS_IN_PROGRESS = 2;
+const TRIP_STATUS_COMPLETED = 3;
+const TRIP_STATUS_CANCELLED = 4;
+
+export const TRIP_STATUSES = {
+    PENDING: TRIP_STATUS_PENDING,
+    IN_PROGRESS: TRIP_STATUS_IN_PROGRESS,
+    COMPLETED: TRIP_STATUS_COMPLETED,
+    CANCELLED: TRIP_STATUS_CANCELLED,
+};
+
+export const TRIP_STATUS_LABELS = {
+    [TRIP_STATUS_PENDING]: 'Pending',
+    [TRIP_STATUS_IN_PROGRESS]: 'Dalam Proses',
+    [TRIP_STATUS_COMPLETED]: 'Selesai',
+    [TRIP_STATUS_CANCELLED]: 'Dibatalkan',
+};
+
+export const TRIP_STATUS_COLORS = {
+    [TRIP_STATUS_PENDING]: 'bg-yellow-100 text-yellow-800',
+    [TRIP_STATUS_IN_PROGRESS]: 'bg-blue-100 text-blue-800',
+    [TRIP_STATUS_COMPLETED]: 'bg-green-100 text-green-800',
+    [TRIP_STATUS_CANCELLED]: 'bg-red-100 text-red-800',
+};

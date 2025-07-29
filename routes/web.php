@@ -56,6 +56,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/{employee}', [\App\Http\Controllers\EmployeeController::class, 'destroy'])->name('employees.destroy')
             ->middleware('password.confirm');
     });
+
+    Route::get('/kelola-trips', [\App\Http\Controllers\TripController::class, 'index'])->name('trips.index');
+    Route::get('/kelola-trips/buat', [\App\Http\Controllers\TripController::class, 'create'])->name('trips.create');
+    Route::get('/kelola-trips/{trip}', [\App\Http\Controllers\TripController::class, 'show'])->name('trips.show');
 });
 
 require __DIR__ . '/settings.php';
