@@ -6,6 +6,7 @@ use App\Helpers\Formatter;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
@@ -57,12 +58,12 @@ class UserSeeder extends Seeder
                 'joined_at' => now(),
                 'married' => false,
                 'password' => Hash::make('user123'),
-                'role' => 'kernek',
+                'role' => 'helper',
             ]
         ];
 
         foreach ($users as $user) {
-            $user = \App\Models\User::create([
+            $newUser = \App\Models\User::create([
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'phone' => $user['phone'],
@@ -73,7 +74,7 @@ class UserSeeder extends Seeder
                 'password' => $user['password'],
             ]);
 
-            $user->assignRole($user['role']);
+            $newUser->assignRole($user['role']);
         }
     }
 }

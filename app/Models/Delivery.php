@@ -68,4 +68,9 @@ class Delivery extends Model
     {
         return $this->belongsTo(User::class, 'cancelled_by');
     }
+
+    public function trips()
+    {
+        return $this->hasMany(Trip::class);
+    }
 }
