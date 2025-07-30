@@ -2,6 +2,7 @@ import CancelDeliveryButton from '@/components/CancelDeliveryButton';
 import Heading from '@/components/heading';
 import HeadingSmall from '@/components/heading-small';
 import LabelItem from '@/components/LabelItem';
+import StartTripButton from '@/components/StartTripButton';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -112,6 +113,8 @@ const DeliveryDetailPage = () => {
                                 <CancelDeliveryButton id={delivery.id} />
                             </div>
                         )}
+
+                    {!isAdmin && delivery.status.id === DELIVERY_STATUSES.DELIVERY_STATUS_PENDING && <StartTripButton id={delivery.id} />}
                 </section>
             </main>
         </AppLayout>

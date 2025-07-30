@@ -6,6 +6,7 @@ use App\Entities\DeliveryStatusEntities;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class DeliveryController extends Controller
@@ -19,6 +20,21 @@ class DeliveryController extends Controller
 
         return Inertia::render('deliveries/ManageDeliveryPage', [
             'deliveries' => Inertia::defer(fn() => $deliveries),
+        ]);
+    }
+
+    public function showMaps($id)
+    {
+        $userRole = Auth::user()->roles->first()->name;
+        $isAdmin = $userRole === 'admin' || $userRole === 'super admin';
+
+        $delivery = \App\Models\Delivery::with(['vehicle', 'driver', 'helper', 'status', 'items.location', 'staff', 'cancelledStaff'])
+            ->withCount('items as total_items')
+            ->findOrFail($id);
+
+        return Inertia::render('deliveries/DeliveryMapsPage', [
+            'delivery' => $delivery,
+            'isAdmin' => $isAdmin,
         ]);
     }
 
@@ -124,8 +140,19 @@ class DeliveryController extends Controller
 
         $delivery = \App\Models\Delivery::create($data);
 
-        foreach ($data['items'] as $item) {
-            $delivery->items()->create($item);
+        try {
+            foreach ($data['items'] as $item) {
+                DB::table('delivery_items')->insert([
+                    'delivery_id' => $data['id'],
+                    'location_id' => $item['location_id'],
+                    'invoice_number' => $item['invoice_number'] ?? null,
+                    'weight' => $item['weight'] ?? 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['items' => 'Failed to create delivery items.']);
         }
 
         return redirect()->route('deliveries.index')->with('success', 'Delivery created successfully.');

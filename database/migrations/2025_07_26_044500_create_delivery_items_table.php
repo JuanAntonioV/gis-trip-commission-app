@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('delivery_items', function (Blueprint $table) {
             $table->id();
 
-            $table->string('delivery_id')->constrained('deliveries')->onDelete('cascade');
+            $table->string('delivery_id');
+            $table->foreign('delivery_id')->references('id')->on('deliveries')->onDelete('cascade');
+
             $table->foreignId('location_id')->constrained('locations')->onDelete('cascade');
 
             $table->string('invoice_number')->nullable();

@@ -13,6 +13,10 @@ class DeliveryItem extends Model
         'weight',
     ];
 
+    protected $casts = [
+        'delivery_id' => 'string',
+    ];
+
     public function delivery()
     {
         return $this->belongsTo(Delivery::class);

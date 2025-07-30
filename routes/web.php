@@ -38,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/kelola-pengiriman', [\App\Http\Controllers\DeliveryController::class, 'index'])->name('deliveries.index');
     Route::get('/kelola-pengiriman/buat', [\App\Http\Controllers\DeliveryController::class, 'create'])->name('deliveries.create');
     Route::get('/kelola-pengiriman/{delivery}', [\App\Http\Controllers\DeliveryController::class, 'show'])->name('deliveries.show');
+    Route::get('/pengiriman/{delivery}', [\App\Http\Controllers\DeliveryController::class, 'showMaps'])->name('deliveries.showMaps');
 
     Route::prefix('deliveries')->group(function () {
         Route::post('/', [\App\Http\Controllers\DeliveryController::class, 'store'])->name('deliveries.store');

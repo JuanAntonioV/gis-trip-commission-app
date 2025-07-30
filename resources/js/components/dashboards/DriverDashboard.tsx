@@ -1,5 +1,5 @@
 import { formatNumber } from '@/lib/utils';
-import { columns as deliveryColumns } from '@/pages/deliveries/columns';
+import { driverDeliveryColumns } from '@/pages/deliveries/driverDeliveryColumns';
 import { columns as tripColumns } from '@/pages/trips/columns';
 import { Delivery, Trip } from '@/types';
 import { usePage } from '@inertiajs/react';
@@ -65,7 +65,7 @@ const DriverDashboard = () => {
             <section className="section">
                 <HeadingSmall title="Pengiriman Saat Ini" description="Daftar pengiriman saat ini yang sedang berlangsung." />
                 <Separator className="my-4" />
-                <DataTable data={latestDeliveries} columns={deliveryColumns} />
+                <DataTable data={latestDeliveries} columns={driverDeliveryColumns} />
             </section>
             <section className="section">
                 <HeadingSmall title="Trip Terakhir" description="Daftar trip terakhir yang telah dibuat." />
