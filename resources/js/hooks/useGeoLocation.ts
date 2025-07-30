@@ -2,7 +2,7 @@ import { TGeoLocation } from '@/types';
 import { useEffect, useState } from 'react';
 
 type Props = {
-    onError?: () => void;
+    onError?: (error: string) => void;
 };
 
 const useGeoLocation = ({ onError }: Props = {}) => {
@@ -24,7 +24,7 @@ const useGeoLocation = ({ onError }: Props = {}) => {
 
     const onErrorHandler = (error) => {
         if (onError) {
-            onError();
+            onError(error?.message || 'Geolocation error');
         }
         setLocation({
             loaded: true,

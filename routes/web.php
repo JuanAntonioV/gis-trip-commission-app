@@ -39,6 +39,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/kelola-pengiriman/buat', [\App\Http\Controllers\DeliveryController::class, 'create'])->name('deliveries.create');
     Route::get('/kelola-pengiriman/{delivery}', [\App\Http\Controllers\DeliveryController::class, 'show'])->name('deliveries.show');
     Route::get('/pengiriman/{delivery}', [\App\Http\Controllers\DeliveryController::class, 'showMaps'])->name('deliveries.showMaps');
+    Route::get('/pengiriman/{delivery}/detail/{tripId}', [\App\Http\Controllers\DeliveryController::class, 'showDetailMaps'])->name('deliveries.showDetailMaps');
 
     Route::prefix('deliveries')->group(function () {
         Route::post('/', [\App\Http\Controllers\DeliveryController::class, 'store'])->name('deliveries.store');
@@ -58,8 +59,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->middleware('password.confirm');
     });
 
+    Route::post('/kelola-trips/mulai', [\App\Http\Controllers\TripController::class, 'startTrip'])->name('trips.start');
+
     Route::get('/kelola-trips', [\App\Http\Controllers\TripController::class, 'index'])->name('trips.index');
-    Route::get('/kelola-trips/buat', [\App\Http\Controllers\TripController::class, 'create'])->name('trips.create');
     Route::get('/kelola-trips/{trip}', [\App\Http\Controllers\TripController::class, 'show'])->name('trips.show');
 });
 

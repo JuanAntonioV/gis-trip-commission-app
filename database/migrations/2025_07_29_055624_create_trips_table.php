@@ -15,18 +15,21 @@ return new class extends Migration
             $table->id();
 
             $table->string('delivery_id')->constrained('deliveries')->onDelete('cascade');
+            $table->string('destination_name')->nullable();
 
-            $table->foreignId('origin_location_id')->nullable()->constrained('locations')->onDelete('cascade');
-            $table->foreignId('destination_location_id')->nullable()->constrained('locations')->onDelete('cascade');
+            $table->string('origin_latitude'); // Latitude asal trip
+            $table->string('origin_longitude'); // Longitude asal trip
+            $table->string('destination_latitude')->nullable(); // Latitude tujuan trip
+            $table->string('destination_longitude')->nullable(); // Longitude tujuan trip
 
             $table->foreignId('status')->constrained('trip_statuses')->onDelete('cascade');
             $table->text('notes')->nullable(); // Catatan tambahan untuk trip
             $table->text('cancellation_reason')->nullable(); // Alasan pembatalan trip jika ada
 
             $table->datetime('start_time'); // Waktu mulai trip
-            $table->datetime('end_time'); // Waktu selesai trip
+            $table->datetime('end_time')->nullable(); // Waktu selesai trip
             $table->integer('starting_km');
-            $table->integer('ending_km');
+            $table->integer('ending_km')->nullable();
 
             $table->integer('trip_weight')->default(0); // Total berat barang dalam trip
             $table->integer('trip_distance')->default(0); // Total jarak tempuh

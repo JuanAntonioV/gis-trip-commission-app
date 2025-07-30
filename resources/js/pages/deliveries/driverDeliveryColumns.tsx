@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { DELIVERY_STATUS_COLORS } from '@/constants';
+import { DELIVERY_STATUS_COLORS, DELIVERY_STATUSES } from '@/constants';
 import { cn } from '@/lib/utils';
 import { Delivery } from '@/types';
 import { Link } from '@inertiajs/react';
@@ -65,11 +65,14 @@ export const driverDeliveryColumns: ColumnDef<Delivery>[] = [
         enableSorting: false,
         cell: ({ row }) => (
             <div className="flex items-center space-x-2">
-                <Button variant="secondary" size={'icon'} asChild>
-                    <Link href={route('deliveries.showMaps', row.original.id)} className="flex items-center gap-2">
-                        <Search />
-                    </Link>
-                </Button>
+                {row.original.status.id === DELIVERY_STATUSES.DELIVERY_STATUS_PENDING ||
+                row.original.status.id === DELIVERY_STATUSES.DELIVERY_STATUS_IN_PROGRESS ? (
+                    <Button variant="secondary" size={'icon'} asChild>
+                        <Link href={route('deliveries.showMaps', row.original.id)} className="flex items-center gap-2">
+                            <Search />
+                        </Link>
+                    </Button>
+                ) : null}
             </div>
         ),
     },

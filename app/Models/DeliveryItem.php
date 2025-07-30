@@ -26,4 +26,9 @@ class DeliveryItem extends Model
     {
         return $this->belongsTo(Location::class);
     }
+
+    public function tripItem()
+    {
+        return $this->belongsTo(TripItem::class, 'id', 'delivery_item_id');
+    }
 }

@@ -28,12 +28,31 @@ class DeliveryController extends Controller
         $userRole = Auth::user()->roles->first()->name;
         $isAdmin = $userRole === 'admin' || $userRole === 'super admin';
 
-        $delivery = \App\Models\Delivery::with(['vehicle', 'driver', 'helper', 'status', 'items.location', 'staff', 'cancelledStaff'])
+        $delivery = \App\Models\Delivery::with(['vehicle', 'driver', 'helper', 'status', 'staff', 'cancelledStaff', 'items.location'])
+            ->with(['items' => function ($query) {
+                $query->whereDoesntHave('tripItem');
+            }])
             ->withCount('items as total_items')
             ->findOrFail($id);
 
         return Inertia::render('deliveries/DeliveryMapsPage', [
             'delivery' => $delivery,
+            'isAdmin' => $isAdmin,
+        ]);
+    }
+
+    public function showDetailMaps($id, $tripId)
+    {
+        $userRole = Auth::user()->roles->first()->name;
+        $isAdmin = $userRole === 'admin' || $userRole === 'super admin';
+
+        $delivery = \App\Models\Delivery::with(['vehicle', 'driver', 'helper', 'status', 'items.location', 'staff', 'cancelledStaff'])
+            ->withCount('items as total_items')
+            ->findOrFail($id);
+
+        return Inertia::render('deliveries/DeliveryDetailMapsPage', [
+            'delivery' => $delivery,
+            'tripId' => $tripId,
             'isAdmin' => $isAdmin,
         ]);
     }
