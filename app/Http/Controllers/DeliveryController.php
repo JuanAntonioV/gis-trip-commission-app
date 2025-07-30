@@ -138,12 +138,13 @@ class DeliveryController extends Controller
             }
         }
 
-        $delivery = \App\Models\Delivery::create($data);
 
+        DB::beginTransaction();
         try {
+            $delivery = \App\Models\Delivery::create($data);
             foreach ($data['items'] as $item) {
                 DB::table('delivery_items')->insert([
-                    'delivery_id' => $data['id'],
+                    'delivery_id' => $delivery->id,
                     'location_id' => $item['location_id'],
                     'invoice_number' => $item['invoice_number'] ?? null,
                     'weight' => $item['weight'] ?? 0,
@@ -151,7 +152,10 @@ class DeliveryController extends Controller
                     'updated_at' => now(),
                 ]);
             }
+            DB::commit();
         } catch (\Exception $e) {
+            dd($e->getMessage());
+            DB::rollBack();
             return redirect()->back()->withErrors(['items' => 'Failed to create delivery items.']);
         }
 

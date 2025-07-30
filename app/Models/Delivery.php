@@ -24,8 +24,18 @@ class Delivery extends Model
         'cancel_reason',
     ];
     protected $keyType = 'string';
+    public $incrementing = false;
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
+
+    protected $casts = [
+        'id' => 'string',
+        'scheduled_at' => 'datetime',
+        'started_at' => 'datetime',
+        'finished_at' => 'datetime',
+        'confirmed_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+    ];
 
     public static function generateId()
     {
