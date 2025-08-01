@@ -63,6 +63,7 @@ class DashboardController extends Controller
             });
         })->where('status', TripStatusEntities::COMPLETED)
             ->orderBy('trip_duration', 'asc')
+            ->orderBy('created_at', 'desc')
             ->selectRaw('TIMESTAMPDIFF(MINUTE, start_time, end_time) as duration_in_minutes')
             ->get()
             ->map(function ($trip) {

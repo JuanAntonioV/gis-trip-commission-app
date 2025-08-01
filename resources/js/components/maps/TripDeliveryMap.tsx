@@ -169,10 +169,17 @@ const TripDeliveryMap = () => {
     const { post, processing, errors, setData, data } = useForm({
         delivery_id: delivery.id,
         location_id: selectedTrip?.location_id || null,
-        latitude: String(currentLocation.coordinates?.lat) || String(defaultLocation.lat),
-        longitude: String(currentLocation.coordinates?.lng) || String(defaultLocation.lng),
+        latitude: '',
+        longitude: '',
         starting_km: 0,
     });
+
+    useEffect(() => {
+        if (currentLocation.loaded && currentLocation.coordinates) {
+            setData('latitude', currentLocation.coordinates!.lat.toString());
+            setData('longitude', currentLocation.coordinates!.lng.toString());
+        }
+    }, [currentLocation]);
 
     const handleStartTrip = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

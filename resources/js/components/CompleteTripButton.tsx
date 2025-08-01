@@ -1,6 +1,6 @@
 import { router, useForm } from '@inertiajs/react';
 import { CheckCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from './ui/alert';
 import {
@@ -50,6 +50,14 @@ const CompleteTripButton = ({ id, currentLocation }: Props) => {
         latitude: currentLocation.latitude,
         longitude: currentLocation.longitude,
     });
+
+    useEffect(() => {
+        if (currentLocation.latitude && currentLocation.longitude) {
+            setData('latitude', currentLocation.latitude);
+            setData('longitude', currentLocation.longitude);
+        }
+    }, [currentLocation]);
+
     const [open, setOpen] = useState(false);
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
