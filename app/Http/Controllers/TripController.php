@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Entities\DeliveryStatusEntities;
 use App\Entities\TripStatusEntities;
+use App\Models\Trip;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -90,5 +92,34 @@ class TripController extends Controller
             'delivery' => $delivery->id,
             'tripId' => $trip->id,
         ])->with('success', 'Trip started successfully.');
+    }
+
+    public function cancelTrip(Request $request)
+    {
+        $request->validate([
+            'trip_id' => 'required|exists:trips,id',
+            'cancel_reason' => 'required|string|max:255',
+        ]);
+
+        $id = $request->input('trip_id');
+
+        $trip = \App\Models\Trip::findOrFail($id);
+
+        DB::beginTransaction();
+        try {
+            $trip->status = TripStatusEntities::CANCELLED;
+            $trip->cancellation_reason = 'Dibatalkan oleh pengguna. Alasan: ' . $request->input('cancel_reason');
+            $trip->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['message' => 'Failed to cancel trip: ' . $e->getMessage()]);
+        }
+
+        return redirect()->route('deliveries.showDetailMaps', [
+            'delivery' => $trip->delivery_id,
+            'tripId' => $trip->id,
+        ])->with('success', 'Trip cancelled successfully.');
     }
 }

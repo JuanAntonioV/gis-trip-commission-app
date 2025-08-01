@@ -1,24 +1,29 @@
 import useGeoLocation from '@/hooks/useGeoLocation';
-import { Delivery, DeliveryItem, Trip } from '@/types';
+import { Delivery, DeliveryItemWithMapInfo, Trip } from '@/types';
 import { router, usePage } from '@inertiajs/react';
-import { Separator } from '@radix-ui/react-select';
 import { AdvancedMarker, ControlPosition, Map, useMap } from '@vis.gl/react-google-maps';
-import { CheckCircle, ChevronLeft, Loader2, MapPlus } from 'lucide-react';
+import dayjs from 'dayjs';
+import { CheckCircle, ChevronLeft, MapPlus } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import CancelTripButton from '../CancelTripButton';
 import HeadingSmall from '../heading-small';
 import { Button } from '../ui/button';
+import { Label } from '../ui/label';
+import { Separator } from '../ui/separator';
 
 const TripDeliveryDetailMap = () => {
     const serverProps = usePage().props;
     const delivery = serverProps.delivery as Delivery;
     const trip = serverProps.trip as Trip;
 
-    const map = useMap('delivery-map');
+    const map = useMap('ongoing-trip-map');
 
     const [mapLoaded, setMapLoaded] = useState(false);
+    console.log('🚀 ~ TripDeliveryDetailMap ~ mapLoaded:', mapLoaded);
 
     useEffect(() => {
         if (map) {
+            console.log('map', map);
             setMapLoaded(true);
         }
     }, [map]);
@@ -28,6 +33,7 @@ const TripDeliveryDetailMap = () => {
             console.error(error);
         },
     });
+
     const defaultLocation = useMemo<{ lat: number; lng: number }>(() => {
         if (currentLocation.loaded) {
             return { lat: currentLocation.coordinates?.lat as number, lng: currentLocation.coordinates?.lng as number };
@@ -36,11 +42,11 @@ const TripDeliveryDetailMap = () => {
         return { lat: 3.595226750097991, lng: 98.67200113297093 };
     }, [currentLocation]);
 
-    type DeliveryItemWithRange = DeliveryItem & { range: number };
-    const [deliveryItems, setDeliveryItems] = useState<DeliveryItemWithRange[]>(
+    const [deliveryItems, setDeliveryItems] = useState<DeliveryItemWithMapInfo[]>(
         delivery.items.map((item) => ({
             ...item,
-            range: 0,
+            range: { text: '0 km', value: 0 },
+            duration: { text: '0 menit', value: 0 },
         })),
     );
 
@@ -77,7 +83,7 @@ const TripDeliveryDetailMap = () => {
     }, [currentLocation, currentLocationMarker, map]);
 
     useEffect(() => {
-        if (!map) return;
+        if (!map || !delivery) return;
 
         const deliveryItems = delivery.items || [];
 
@@ -102,11 +108,16 @@ const TripDeliveryDetailMap = () => {
                             const element = response.rows[0].elements[index];
                             return {
                                 ...item,
-                                range: (element.distance?.value || Infinity) / 1000,
+                                range: element.distance
+                                    ? { text: element.distance.text, value: element.distance.value / 1000 } // in kilometers
+                                    : { text: '0 km', value: 0 },
+                                duration: element.duration
+                                    ? { text: element.duration.text, value: element.duration.value } // in seconds
+                                    : { text: '0 menit', value: 0 },
                             };
                         });
 
-                        updatedDeliveryItems.sort((a, b) => a.range - b.range);
+                        updatedDeliveryItems.sort((a, b) => a.range.value - b.range.value);
                         setDeliveryItems(updatedDeliveryItems);
                     } else {
                         console.error('Distance Matrix request failed:', status);
@@ -116,7 +127,7 @@ const TripDeliveryDetailMap = () => {
         }
     }, [map, defaultLocation, delivery]);
 
-    const [selectedTrip, setSelectedTrip] = useState<DeliveryItemWithRange | null>(null);
+    const [selectedTrip, setSelectedTrip] = useState<DeliveryItemWithMapInfo | null>(null);
 
     useEffect(() => {
         if (deliveryItems.length > 0 && trip) {
@@ -176,18 +187,6 @@ const TripDeliveryDetailMap = () => {
         }
     };
 
-    if (mapLoaded) {
-        return (
-            <div className="flex h-screen flex-col items-center justify-center space-y-4">
-                <Loader2 className="mr-2 animate-spin" />
-                <div className="text-center">
-                    <h4 className="text-base font-semibold">Memuat peta...</h4>
-                    <div className="mt-1 text-sm text-gray-500">Pastikan koneksi internet Anda stabil.</div>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="relative h-full w-full">
             <div className="absolute top-4 left-4 z-10 flex items-center gap-4">
@@ -198,8 +197,8 @@ const TripDeliveryDetailMap = () => {
 
             <div className="flex h-screen flex-col items-center justify-center">
                 <Map
-                    id="delivery-map"
-                    mapId={'delivery-map'}
+                    id="ongoing-trip-map"
+                    mapId={'ongoing-trip-map'}
                     style={{
                         width: '100%',
                         height: '100%',
@@ -230,15 +229,36 @@ const TripDeliveryDetailMap = () => {
             </div>
 
             <div className="absolute right-0 bottom-0 left-0 mx-auto w-full max-w-xl rounded-t-3xl bg-white px-4 pt-6 pb-10 text-black shadow-2xl">
-                <HeadingSmall title="Daftar Pengiriman" />
+                <HeadingSmall title="Pengiriman Berlangsung" />
 
                 <Separator className="mt-2 mb-4" />
 
                 <form className="space-y-6">
                     {selectedTrip && (
                         <div className="mt-4">
+                            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+                                <div>
+                                    <Label>Estimasi</Label>
+                                    <p className="text-sm text-gray-500">
+                                        {selectedTrip.duration.text} ({selectedTrip.range.text})
+                                    </p>
+                                </div>
+                                <div>
+                                    <Label>Estimasi Tiba</Label>
+                                    <p className="text-sm text-gray-500">{dayjs().add(selectedTrip.duration.value, 'seconds').format('HH:mm')}</p>
+                                </div>
+                                <div>
+                                    <Label>Estimasi Terlama</Label>
+                                    <p className="text-sm text-gray-500">
+                                        {dayjs()
+                                            .add(selectedTrip.duration.value * 1.1 + 300, 'seconds')
+                                            .format('HH:mm')}
+                                    </p>
+                                </div>
+                            </div>
+                            <Separator className="my-4" />
                             <h4 className="text-sm font-medium">
-                                List Barang ({deliveryItems.filter((item) => item.location_id === selectedTrip.location_id).length})
+                                Barang ({deliveryItems.filter((item) => item.location_id === selectedTrip.location_id).length})
                             </h4>
 
                             <ul className="mt-2 max-h-60 space-y-2 overflow-y-auto">
@@ -257,19 +277,11 @@ const TripDeliveryDetailMap = () => {
                     )}
 
                     <footer className="mt-8 grid w-full grid-cols-2 gap-4">
-                        <Button className="w-full bg-blue-500 py-4 transition-colors hover:bg-blue-600" type="submit">
+                        <Button className="w-full bg-green-500 py-4 transition-colors hover:bg-green-600" type="submit">
                             <CheckCircle />
                             Selesai
                         </Button>
-                        <Button
-                            className="w-full bg-emerald-500 py-4 transition-colors hover:bg-emerald-600"
-                            type="button"
-                            onClick={() => {
-                                alert('Fitur ini belum tersedia.');
-                            }}
-                        >
-                            Batalkan
-                        </Button>
+                        <CancelTripButton id={trip.id} deliveryId={trip.delivery_id} />
 
                         {selectedTrip && (
                             <Button variant={'ghost'} className="col-span-2 w-full py-4" type="button" onClick={handleRedirectGoogleMaps}>

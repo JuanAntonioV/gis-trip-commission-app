@@ -176,3 +176,10 @@ export interface Trip {
     total_items: number;
     delivery: Delivery;
 }
+
+export type MapRange = {
+    text: string;
+    value: number;
+};
+export type MapDuration = MapRange;
+export type DeliveryItemWithMapInfo = DeliveryItem & { range: MapRange; duration: MapDuration };

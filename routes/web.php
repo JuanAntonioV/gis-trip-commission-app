@@ -63,6 +63,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/kelola-trips', [\App\Http\Controllers\TripController::class, 'index'])->name('trips.index');
     Route::get('/kelola-trips/{trip}', [\App\Http\Controllers\TripController::class, 'show'])->name('trips.show');
+
+    Route::prefix('trips')->group(function () {
+        Route::post('/cancel', [\App\Http\Controllers\TripController::class, 'cancelTrip'])->name('trips.cancel');
+    });
 });
 
 require __DIR__ . '/settings.php';

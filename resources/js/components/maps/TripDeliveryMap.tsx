@@ -1,14 +1,15 @@
 import useGeoLocation from '@/hooks/useGeoLocation';
-import { Delivery, DeliveryItem } from '@/types';
+import { Delivery, DeliveryItemWithMapInfo } from '@/types';
 import { router, useForm, usePage } from '@inertiajs/react';
 import { AdvancedMarker, ControlPosition, Map, useMap } from '@vis.gl/react-google-maps';
-import { ChevronLeft, Loader2, LocateFixed, MapPlus, Send } from 'lucide-react';
+import { ChevronLeft, Loader2, LocateFixed, Send } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import HeadingSmall from '../heading-small';
 import SelectInput from '../SelectInput';
 import { Alert, AlertDescription } from '../ui/alert';
 import { Button } from '../ui/button';
+import { Label } from '../ui/label';
 import NumberInput from '../ui/NumberInput';
 import { Separator } from '../ui/separator';
 
@@ -39,11 +40,11 @@ const TripDeliveryMap = () => {
         }
     }, [map]);
 
-    type DeliveryItemWithRange = DeliveryItem & { range: number };
-    const [deliveryItems, setDeliveryItems] = useState<DeliveryItemWithRange[]>(
+    const [deliveryItems, setDeliveryItems] = useState<DeliveryItemWithMapInfo[]>(
         delivery.items.map((item) => ({
             ...item,
-            range: 0,
+            range: { text: '0 km', value: 0 },
+            duration: { text: '0 menit', value: 0 },
         })),
     );
 
@@ -105,11 +106,16 @@ const TripDeliveryMap = () => {
                             const element = response.rows[0].elements[index];
                             return {
                                 ...item,
-                                range: (element.distance?.value || Infinity) / 1000,
+                                range: element.distance
+                                    ? { text: element.distance.text, value: element.distance.value / 1000 } // in kilometers
+                                    : { text: '0 km', value: 0 },
+                                duration: element.duration
+                                    ? { text: element.duration.text, value: element.duration.value } // in seconds
+                                    : { text: '0 menit', value: 0 },
                             };
                         });
 
-                        updatedDeliveryItems.sort((a, b) => a.range - b.range);
+                        updatedDeliveryItems.sort((a, b) => a.range.value - b.range.value);
                         setDeliveryItems(updatedDeliveryItems);
                     } else {
                         console.error('Distance Matrix request failed:', status);
@@ -119,7 +125,7 @@ const TripDeliveryMap = () => {
         }
     }, [map, defaultLocation, delivery]);
 
-    const [selectedTrip, setSelectedTrip] = useState<DeliveryItemWithRange | null>(null);
+    const [selectedTrip, setSelectedTrip] = useState<DeliveryItemWithMapInfo | null>(null);
 
     useEffect(() => {
         if (!map || !selectedTrip || !selectedTrip.location.latitude || !selectedTrip.location.longitude) return;
@@ -159,14 +165,6 @@ const TripDeliveryMap = () => {
             },
         );
     }, [map, selectedTrip, defaultLocation]);
-
-    const handleRedirectGoogleMaps = () => {
-        if (selectedTrip) {
-            const { latitude, longitude } = selectedTrip.location;
-            const url = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
-            window.open(url, '_blank');
-        }
-    };
 
     const { post, processing, errors, setData, data } = useForm({
         delivery_id: delivery.id,
@@ -277,7 +275,7 @@ const TripDeliveryMap = () => {
                         }}
                         data={deliveryItems.map((item) => ({
                             value: item.location_id?.toString(),
-                            label: `${item.location.name} - ${item.range.toFixed(2)} km`,
+                            label: item.location.name,
                         }))}
                         placeholder="Pilih tujuan pengiriman"
                     />
@@ -293,8 +291,17 @@ const TripDeliveryMap = () => {
 
                     {selectedTrip && (
                         <div className="mt-4">
+                            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+                                <div>
+                                    <Label>Estimasi Tiba:</Label>
+                                    <p className="text-sm text-gray-500">
+                                        {selectedTrip.duration.text} ({selectedTrip.range.text})
+                                    </p>
+                                </div>
+                            </div>
+                            <Separator className="my-4" />
                             <h4 className="text-sm font-medium">
-                                List Barang ({deliveryItems.filter((item) => item.location_id === selectedTrip.location_id).length})
+                                Barang ({deliveryItems.filter((item) => item.location_id === selectedTrip.location_id).length})
                             </h4>
 
                             <ul className="mt-2 max-h-60 space-y-2 overflow-y-auto">
@@ -327,13 +334,6 @@ const TripDeliveryMap = () => {
                             <LocateFixed />
                             Singgah
                         </Button>
-
-                        {selectedTrip && (
-                            <Button variant={'ghost'} className="col-span-2 w-full py-4" type="button" onClick={handleRedirectGoogleMaps}>
-                                <MapPlus />
-                                Tautan Lokasi
-                            </Button>
-                        )}
                     </footer>
                 </form>
             </div>
