@@ -66,6 +66,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('trips')->group(function () {
         Route::post('/cancel', [\App\Http\Controllers\TripController::class, 'cancelTrip'])->name('trips.cancel');
+        Route::post('/complete', [\App\Http\Controllers\TripController::class, 'completeTrip'])->name('trips.complete');
     });
 });
 

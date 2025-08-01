@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Entities\DeliveryStatusEntities;
 use App\Entities\TripStatusEntities;
 use App\Models\Trip;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Termwind\Components\Raw;
 
 class TripController extends Controller
 {
@@ -121,5 +123,67 @@ class TripController extends Controller
             'delivery' => $trip->delivery_id,
             'tripId' => $trip->id,
         ])->with('success', 'Trip cancelled successfully.');
+    }
+
+    public function completeTrip(Request $request)
+    {
+        $request->validate([
+            'trip_id' => 'required|exists:trips,id',
+            'latitude' => 'required|string',
+            'longitude' => 'required|string',
+            'notes' => 'nullable|string|max:255',
+            'ending_km' => 'required|numeric',
+        ]);
+
+        $id = $request->input('trip_id');
+        $endingKm = $request->input('ending_km');
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+        $notes = $request->input('notes');
+
+        $trip = \App\Models\Trip::findOrFail($id);
+
+        if ($endingKm < $trip->starting_km) {
+            return redirect()->back()->withErrors(['ending_km' => 'Kilometer akhir tidak boleh kurang dari kilometer awal.']);
+        }
+
+        DB::beginTransaction();
+        try {
+            $startingKm = $trip->starting_km;
+
+            $trip->trip_duration = Carbon::parse($trip->start_time)->diffInMinutes(now());
+            $trip->trip_distance = $endingKm - $startingKm;
+            $trip->status = TripStatusEntities::COMPLETED;
+            $trip->destination_latitude = $latitude;
+            $trip->destination_longitude = $longitude;
+            $trip->notes = $notes;
+            $trip->ending_km = $endingKm;
+            $trip->end_time = now();
+            $trip->save();
+
+            // Update delivery status if necessary
+            $totalDeliveryItems = $trip->delivery->items->count();
+            $completedItems = \App\Models\TripItem::whereHas('trip', function ($query) use ($trip) {
+                $query
+                    ->where('delivery_id', $trip->delivery_id)
+                    ->where('status', TripStatusEntities::COMPLETED);
+            })->count();
+
+            if ($totalDeliveryItems === $completedItems) {
+                $trip->delivery->status = DeliveryStatusEntities::COMPLETED;
+                $trip->delivery->finished_at = now();
+                $trip->delivery->save();
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['message' => 'Failed to complete trip: ' . $e->getMessage()]);
+        }
+
+        return redirect()->route('deliveries.showDetailMaps', [
+            'delivery' => $trip->delivery_id,
+            'tripId' => $trip->id,
+        ])->with('success', 'Trip completed successfully.');
     }
 }

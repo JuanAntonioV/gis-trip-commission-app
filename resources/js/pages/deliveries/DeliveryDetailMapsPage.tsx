@@ -2,6 +2,7 @@ import TripDeliveryDetailMap from '@/components/maps/TripDeliveryDetailMap';
 import { useAppearance } from '@/hooks/use-appearance';
 import GoogleMapsProvider from '@/providers/GoogleMapsProvider';
 import { useEffect } from 'react';
+import { Toaster } from 'sonner';
 
 const DeliveryDetailMapsPage = () => {
     const { updateAppearance } = useAppearance();
@@ -12,6 +13,7 @@ const DeliveryDetailMapsPage = () => {
 
     return (
         <GoogleMapsProvider>
+            <Toaster />
             <TripDeliveryDetailMap />
         </GoogleMapsProvider>
     );

@@ -3,9 +3,10 @@ import { Delivery, DeliveryItemWithMapInfo, Trip } from '@/types';
 import { router, usePage } from '@inertiajs/react';
 import { AdvancedMarker, ControlPosition, Map, useMap } from '@vis.gl/react-google-maps';
 import dayjs from 'dayjs';
-import { CheckCircle, ChevronLeft, MapPlus } from 'lucide-react';
+import { ChevronLeft, MapPlus } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import CancelTripButton from '../CancelTripButton';
+import CompleteTripButton from '../CompleteTripButton';
 import HeadingSmall from '../heading-small';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
@@ -83,7 +84,7 @@ const TripDeliveryDetailMap = () => {
     }, [currentLocation, currentLocationMarker, map]);
 
     useEffect(() => {
-        if (!map || !delivery) return;
+        if (!map || !delivery || !defaultLocation || !delivery) return;
 
         const deliveryItems = delivery.items || [];
 
@@ -138,10 +139,10 @@ const TripDeliveryDetailMap = () => {
                 setSelectedTrip(null);
             }
         }
-    }, [deliveryItems]);
+    }, [deliveryItems, trip]);
 
     useEffect(() => {
-        if (!map || !selectedTrip || !selectedTrip.location.latitude || !selectedTrip.location.longitude) return;
+        if (!map || !defaultLocation || !selectedTrip || !selectedTrip.location.latitude || !selectedTrip.location.longitude) return;
 
         // remove current location marker
         if (currentLocationMarker) {
@@ -277,10 +278,13 @@ const TripDeliveryDetailMap = () => {
                     )}
 
                     <footer className="mt-8 grid w-full grid-cols-2 gap-4">
-                        <Button className="w-full bg-green-500 py-4 transition-colors hover:bg-green-600" type="submit">
-                            <CheckCircle />
-                            Selesai
-                        </Button>
+                        <CompleteTripButton
+                            id={trip.id}
+                            currentLocation={{
+                                latitude: currentLocation.coordinates?.lat.toString() || defaultLocation.lat.toString(),
+                                longitude: currentLocation.coordinates?.lng.toString() || defaultLocation.lng.toString(),
+                            }}
+                        />
                         <CancelTripButton id={trip.id} deliveryId={trip.delivery_id} />
 
                         {selectedTrip && (

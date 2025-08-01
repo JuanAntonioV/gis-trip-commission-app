@@ -185,13 +185,6 @@ const TripDeliveryMap = () => {
             onSuccess: () => {
                 // Handle success
                 toast.success('Pengiriman berhasil dimulai.');
-                // Redirect to the trip detail page
-                router.visit(
-                    route('deliveries.showDetailMaps', {
-                        delivery: delivery.id,
-                        tripId: selectedTrip.id,
-                    }),
-                );
             },
             onError: () => {
                 // Handle error
