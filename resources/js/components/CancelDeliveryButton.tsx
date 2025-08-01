@@ -1,9 +1,8 @@
-import { useForm } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogFooter,
@@ -19,6 +18,7 @@ type Props = {
 };
 
 type FormType = {
+    delivery_id: string;
     cancel_reason: string;
 };
 
@@ -26,24 +26,29 @@ const CancelDeliveryButton = ({ id }: Props) => {
     const {
         data,
         setData,
-        patch: cancelDelivery,
+        post: cancelDelivery,
         processing,
+        resetAndClearErrors,
     } = useForm<Required<FormType>>({
+        delivery_id: id,
         cancel_reason: '',
     });
     const [open, setOpen] = useState(false);
 
     const handleCancelDelivery = () => {
-        cancelDelivery(route('deliveries.cancel', id), {
+        cancelDelivery(route('deliveries.cancel'), {
             preserveScroll: true,
             onSuccess: () => {
                 // Handle success, e.g., show a toast notification
                 toast.success('Pengiriman berhasil dibatalkan');
-            },
-            onError: () => {
-                // Handle error, e.g., show a toast notification
-                toast.error('Pengiriman gagal dibatalkan');
+                router.reload({ only: ['delivery'] });
+                resetAndClearErrors(); // Reset form data and errors
                 setOpen(false);
+            },
+            onError: (err) => {
+                console.log('🚀 ~ handleCancelDelivery ~ err:', err);
+                // Handle error, e.g., show a toast notification
+                toast.error(err.message || 'Pengiriman gagal dibatalkan');
             },
         });
     };
@@ -70,9 +75,9 @@ const CancelDeliveryButton = ({ id }: Props) => {
                 </AlertDialogHeader>
                 <AlertDialogFooter className="mt-4">
                     <AlertDialogCancel>Kembali</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleCancelDelivery} loading={processing}>
+                    <Button onClick={handleCancelDelivery} loading={processing}>
                         Lanjutkan
-                    </AlertDialogAction>
+                    </Button>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

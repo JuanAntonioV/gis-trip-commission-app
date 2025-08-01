@@ -12,8 +12,9 @@ class TripController extends Controller
 {
     public function index()
     {
-        $trips = \App\Models\Trip::with(['delivery.vehicle', 'delivery.driver', 'delivery.helper'])
-            ->withCount('items as items_items')
+        $trips = \App\Models\Trip::with(['delivery.vehicle', 'delivery.driver', 'delivery.helper', 'delivery.status', 'status'])
+            ->withCount('items as total_items')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return Inertia::render('trips/ManageTripPage', [
@@ -54,7 +55,7 @@ class TripController extends Controller
 
         $data = [
             'delivery_id' => $delivery->id,
-            'destination_name' => $selectedTrips->isNotEmpty() ? $selectedTrips->first()->location->name : 'Unknown',
+            'destination_location_id' => $selectedTrips->isNotEmpty() ? $selectedTrips->first()->location->id : 'Unknown',
             'origin_latitude' => $latitude,
             'origin_longitude' => $longitude,
             'starting_km' => $startingKm,

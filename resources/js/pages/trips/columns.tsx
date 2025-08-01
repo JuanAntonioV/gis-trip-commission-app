@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TRIP_STATUS_COLORS } from '@/constants';
-import { cn } from '@/lib/utils';
+import { cn, formatNumber } from '@/lib/utils';
 import { Trip } from '@/types';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
@@ -19,29 +19,24 @@ export const columns: ColumnDef<Trip>[] = [
         cell: ({ getValue, row }) => `${getValue() || 'N/A'} (${row.original.delivery?.status.name || 'N/A'})`,
     },
     {
-        accessorKey: 'origin_location.name',
-        header: 'Lokasi Asal',
-        cell: ({ getValue }) => `${getValue() || 'N/A'}`,
-    },
-    {
-        accessorKey: 'destination_location.name',
+        accessorKey: 'destination_name',
         header: 'Lokasi Tujuan',
         cell: ({ getValue }) => `${getValue() || 'N/A'}`,
     },
     {
-        accessorKey: 'driver.name',
+        accessorKey: 'delivery.driver.name',
         header: 'Pengemudi',
         cell: ({ getValue }) => `${getValue() || 'N/A'}`,
     },
     {
-        accessorKey: 'helper.name',
+        accessorKey: 'delivery.helper.name',
         header: 'Kernek',
-        cell: ({ getValue }) => `${getValue() || 'N/A'}`,
+        cell: ({ getValue }) => `${getValue() || '-'}`,
     },
     {
         accessorKey: 'total_items',
         header: 'Total Barang',
-        cell: ({ getValue }) => `${getValue() || 0}`,
+        cell: ({ getValue }) => (getValue() ? formatNumber(getValue() as number) : '0'),
     },
     {
         accessorKey: 'status.name',

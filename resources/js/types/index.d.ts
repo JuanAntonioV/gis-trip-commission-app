@@ -153,26 +153,26 @@ export type TripStatus = {
     created_at: string;
     updated_at: string;
 };
-
-export type Trip = {
+export interface Trip {
     id: number;
     delivery_id: string;
-    delivery: Delivery; // Relationship to Delivery
-    origin_location_id?: number | null;
-    origin_location?: Location | null; // Optional relationship to Location
-    destination_location_id?: number | null;
-    destination_location?: Location | null; // Optional relationship to Location
+    destination_location_id: number;
+    origin_latitude: string;
+    origin_longitude: string;
+    destination_latitude: null;
+    destination_longitude: null;
     status: TripStatus;
-    notes?: string | null;
-    cancellation_reason?: string | null;
-    start_time: Date; // ISO date string
-    end_time: Date; // ISO date string
+    notes: null;
+    cancellation_reason: null;
+    start_time: string;
+    end_time: null;
     starting_km: number;
-    ending_km: number;
-    trip_weight: number; // Total weight of items in the trip
-    trip_distance: number; // Total distance traveled
-    trip_duration: number; // Duration in minutes
-    created_at: Date; // ISO date string
-    updated_at: Date; // ISO date string
-    items: DeliveryItem[]; // Items associated with the trip
-};
+    ending_km: null;
+    trip_weight: number;
+    trip_distance: number;
+    trip_duration: number;
+    created_at: string;
+    updated_at: string;
+    total_items: number;
+    delivery: Delivery;
+}

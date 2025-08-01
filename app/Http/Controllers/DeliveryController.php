@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Entities\DeliveryStatusEntities;
+use App\Entities\TripStatusEntities;
+use App\Models\Trip;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -173,7 +175,6 @@ class DeliveryController extends Controller
             }
             DB::commit();
         } catch (\Exception $e) {
-            dd($e->getMessage());
             DB::rollBack();
             return redirect()->back()->withErrors(['items' => 'Failed to create delivery items.']);
         }
@@ -181,23 +182,46 @@ class DeliveryController extends Controller
         return redirect()->route('deliveries.index')->with('success', 'Delivery created successfully.');
     }
 
-    public function cancel(Request $request, $id)
+    public function cancel(Request $request)
     {
         $data = $request->validate([
+            'delivery_id' => 'required|exists:deliveries,id',
             'cancel_reason' => 'required|string|max:255',
         ]);
 
+        $isAdmin = Auth::user()->hasRole('admin') || Auth::user()->hasRole('super admin');
+
+        $id = $data['delivery_id'];
+
         $delivery = \App\Models\Delivery::findOrFail($id);
 
-        if ($delivery->status !== DeliveryStatusEntities::PENDING) {
-            return redirect()->back()->with('error', 'Only pending deliveries can be canceled.');
+        if ($delivery->status !== DeliveryStatusEntities::PENDING && !$isAdmin) {
+            return redirect()->back()->withErrors(['message' => 'Hanya pengiriman dengan status "Pending" yang dapat dibatalkan.']);
         }
 
-        $delivery->update([
-            'status' => DeliveryStatusEntities::CANCELLED,
-            'cancel_reason' => $data['cancel_reason'],
-            'canceled_by' => Auth::id(),
-        ]);
+        DB::beginTransaction();
+        try {
+            $delivery->update([
+                'status' => DeliveryStatusEntities::CANCELLED,
+                'cancel_reason' => $data['cancel_reason'],
+                'canceled_by' => Auth::id(),
+            ]);
+
+            $trip = Trip::where('delivery_id', $delivery->id)->first();
+
+            $trip->update([
+                'status' => TripStatusEntities::CANCELLED,
+                'cancellation_reason' => 'Dibatalkan melalui pengiriman. Alasan: ' . $data['cancel_reason'],
+            ]);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors([
+                'message' => 'Gagal membatalkan pengiriman. Pastikan pengiriman dalam status "Pending".',
+                'error' => $e->getMessage()
+            ]);
+        }
 
         return redirect()->route('deliveries.index')->with('success', 'Delivery canceled successfully.');
     }

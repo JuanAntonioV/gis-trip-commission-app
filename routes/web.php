@@ -43,7 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('deliveries')->group(function () {
         Route::post('/', [\App\Http\Controllers\DeliveryController::class, 'store'])->name('deliveries.store');
-        Route::patch('/{delivery}/cancel', [\App\Http\Controllers\DeliveryController::class, 'cancel'])->name('deliveries.cancel')->middleware('password.confirm');
+        Route::post('/cancel', [\App\Http\Controllers\DeliveryController::class, 'cancel'])->name('deliveries.cancel');
     });
 
     Route::get('/kelola-karyawan', [\App\Http\Controllers\EmployeeController::class, 'index'])->name('employees.index');

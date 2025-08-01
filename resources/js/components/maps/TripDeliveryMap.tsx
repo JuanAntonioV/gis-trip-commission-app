@@ -2,7 +2,7 @@ import useGeoLocation from '@/hooks/useGeoLocation';
 import { Delivery, DeliveryItem } from '@/types';
 import { router, useForm, usePage } from '@inertiajs/react';
 import { AdvancedMarker, ControlPosition, Map, useMap } from '@vis.gl/react-google-maps';
-import { Loader2, LocateFixed, MapPlus, Send } from 'lucide-react';
+import { ChevronLeft, Loader2, LocateFixed, MapPlus, Send } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import HeadingSmall from '../heading-small';
@@ -216,6 +216,12 @@ const TripDeliveryMap = () => {
 
     return (
         <div className="relative h-full w-full">
+            <div className="absolute top-4 left-4 z-10 flex items-center gap-4">
+                <Button variant={'default'} onClick={() => router.visit('/dashboard')} className="bg-white text-black hover:bg-gray-100">
+                    <ChevronLeft />
+                </Button>
+            </div>
+
             <div className="flex h-screen flex-col items-center justify-center">
                 <Map
                     id="delivery-map"
@@ -234,7 +240,7 @@ const TripDeliveryMap = () => {
                     defaultZoom={15}
                     cameraControl
                     cameraControlOptions={{
-                        position: ControlPosition.TOP_LEFT,
+                        position: ControlPosition.TOP_RIGHT,
                     }}
                     controlSize={30}
                 >

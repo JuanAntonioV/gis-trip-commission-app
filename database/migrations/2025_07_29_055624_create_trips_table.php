@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('delivery_id')->constrained('deliveries')->onDelete('cascade');
-            $table->string('destination_name')->nullable();
+            $table->foreignId('destination_location_id')->constrained('locations')->onDelete('cascade');
 
             $table->string('origin_latitude'); // Latitude asal trip
             $table->string('origin_longitude'); // Longitude asal trip
