@@ -2,9 +2,10 @@ import useGeoLocation from '@/hooks/useGeoLocation';
 import { Delivery, DeliveryItemWithMapInfo } from '@/types';
 import { router, useForm, usePage } from '@inertiajs/react';
 import { AdvancedMarker, ControlPosition, Map, useMap } from '@vis.gl/react-google-maps';
-import { ChevronLeft, Loader2, LocateFixed, Send } from 'lucide-react';
+import { ChevronLeft, Loader2, Send } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import CreateTripStopButton from '../CreateTripStopButton';
 import HeadingSmall from '../heading-small';
 import SelectInput from '../SelectInput';
 import { Alert, AlertDescription } from '../ui/alert';
@@ -324,16 +325,17 @@ const TripDeliveryMap = () => {
                             <Send />
                             Mulai
                         </Button>
-                        <Button
-                            className="w-full bg-emerald-500 py-4 transition-colors hover:bg-emerald-600"
-                            type="button"
-                            onClick={() => {
-                                alert('Fitur ini belum tersedia.');
-                            }}
-                        >
-                            <LocateFixed />
-                            Singgah
-                        </Button>
+                        <CreateTripStopButton
+                            deliveryId={delivery.id}
+                            currentLocation={
+                                currentLocation.loaded
+                                    ? {
+                                          latitude: currentLocation.coordinates!.lat.toString(),
+                                          longitude: currentLocation.coordinates!.lng.toString(),
+                                      }
+                                    : { latitude: defaultLocation.lat.toString(), longitude: defaultLocation.lng.toString() }
+                            }
+                        />
                     </footer>
                 </form>
             </div>

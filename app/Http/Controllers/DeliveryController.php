@@ -70,6 +70,27 @@ class DeliveryController extends Controller
         ]);
     }
 
+    public function showStopDetailMaps($id, $tripStopId)
+    {
+        $userRole = Auth::user()->roles->first()->name;
+        $isAdmin = $userRole === 'admin' || $userRole === 'super admin';
+
+        $delivery = \App\Models\Delivery::with(['vehicle', 'driver', 'helper', 'status', 'items.location', 'staff', 'cancelledStaff'])
+            ->withCount('items as total_items')
+            ->findOrFail($id);
+
+        $tripStop = \App\Models\TripStop::with(['delivery'])
+            ->where('id', $tripStopId)
+            ->where('delivery_id', $id)
+            ->firstOrFail();
+
+        return Inertia::render('deliveries/TripStopDetailMapsPage', [
+            'delivery' => $delivery,
+            'tripStop' => $tripStop,
+            'isAdmin' => $isAdmin,
+        ]);
+    }
+
     public function create()
     {
         $vehicles = \App\Models\Vehicle::all();

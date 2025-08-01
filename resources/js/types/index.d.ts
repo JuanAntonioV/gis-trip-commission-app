@@ -183,3 +183,24 @@ export type MapRange = {
 };
 export type MapDuration = MapRange;
 export type DeliveryItemWithMapInfo = DeliveryItem & { range: MapRange; duration: MapDuration };
+
+export type TripStop = {
+    id: number;
+    delivery_id: string;
+    destination_name: string;
+    origin_latitude: string;
+    origin_longitude: string;
+    destination_latitude: string | null;
+    destination_longitude: string | null;
+    status: TripStatus;
+    notes: string | null;
+    start_time: string | null; // ISO date string
+    end_time: string | null; // ISO date string
+    starting_km: number;
+    ending_km: number | null;
+    trip_distance: number;
+    trip_duration: number;
+    created_at: string; // ISO date string
+    updated_at: string; // ISO date string
+    delivery: Delivery; // Relationship to Delivery
+};

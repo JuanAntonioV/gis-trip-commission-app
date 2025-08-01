@@ -16,11 +16,6 @@ class Trip extends Model
             ->withTimestamps();
     }
 
-    public function originLocation()
-    {
-        return $this->belongsTo(Location::class, 'origin_location_id');
-    }
-
     public function destinationLocation()
     {
         return $this->belongsTo(Location::class, 'destination_location_id');

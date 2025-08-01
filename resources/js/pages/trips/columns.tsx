@@ -19,7 +19,7 @@ export const columns: ColumnDef<Trip>[] = [
         cell: ({ getValue, row }) => `${getValue() || 'N/A'} (${row.original.delivery?.status.name || 'N/A'})`,
     },
     {
-        accessorKey: 'destination_name',
+        accessorKey: 'destination_location.name',
         header: 'Lokasi Tujuan',
         cell: ({ getValue }) => `${getValue() || 'N/A'}`,
     },

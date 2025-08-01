@@ -16,7 +16,7 @@ class TripController extends Controller
 {
     public function index()
     {
-        $trips = \App\Models\Trip::with(['delivery.vehicle', 'delivery.driver', 'delivery.helper', 'delivery.status', 'status'])
+        $trips = \App\Models\Trip::with(['delivery.vehicle', 'delivery.driver', 'delivery.helper', 'delivery.status', 'status', 'destinationLocation'])
             ->withCount('items as total_items')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -151,7 +151,7 @@ class TripController extends Controller
         try {
             $startingKm = $trip->starting_km;
 
-            $trip->trip_duration = Carbon::parse($trip->start_time)->diffInMinutes(now());
+            $trip->trip_duration = Carbon::parse($trip->start_time)->diffInSeconds(now());
             $trip->trip_distance = $endingKm - $startingKm;
             $trip->status = TripStatusEntities::COMPLETED;
             $trip->destination_latitude = $latitude;

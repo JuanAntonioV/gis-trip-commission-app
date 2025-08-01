@@ -40,6 +40,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/kelola-pengiriman/{delivery}', [\App\Http\Controllers\DeliveryController::class, 'show'])->name('deliveries.show');
     Route::get('/pengiriman/{delivery}', [\App\Http\Controllers\DeliveryController::class, 'showMaps'])->name('deliveries.showMaps');
     Route::get('/pengiriman/{delivery}/detail/{tripId}', [\App\Http\Controllers\DeliveryController::class, 'showDetailMaps'])->name('deliveries.showDetailMaps');
+    Route::get('/pengiriman/{delivery}/detail-pemberhentian/{tripStopId}', [\App\Http\Controllers\DeliveryController::class, 'showStopDetailMaps'])->name('deliveries.showStopDetailMaps');
 
     Route::prefix('deliveries')->group(function () {
         Route::post('/', [\App\Http\Controllers\DeliveryController::class, 'store'])->name('deliveries.store');
@@ -59,7 +60,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->middleware('password.confirm');
     });
 
-    Route::post('/kelola-trips/mulai', [\App\Http\Controllers\TripController::class, 'startTrip'])->name('trips.start');
+    Route::post('/kelola-trips/start', [\App\Http\Controllers\TripController::class, 'startTrip'])->name('trips.start');
 
     Route::get('/kelola-trips', [\App\Http\Controllers\TripController::class, 'index'])->name('trips.index');
     Route::get('/kelola-trips/{trip}', [\App\Http\Controllers\TripController::class, 'show'])->name('trips.show');
@@ -67,6 +68,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('trips')->group(function () {
         Route::post('/cancel', [\App\Http\Controllers\TripController::class, 'cancelTrip'])->name('trips.cancel');
         Route::post('/complete', [\App\Http\Controllers\TripController::class, 'completeTrip'])->name('trips.complete');
+    });
+
+    Route::prefix('trip-stops')->group(function () {
+        Route::post('/start', [\App\Http\Controllers\TripStopController::class, 'startTripStop'])->name('trip-stops.start');
+        Route::post('/cancel', [\App\Http\Controllers\TripStopController::class, 'cancelTripStop'])->name('trip-stops.cancel');
+        Route::post('/complete', [\App\Http\Controllers\TripStopController::class, 'completeTripStop'])->name('trip-stops.complete');
     });
 });
 
