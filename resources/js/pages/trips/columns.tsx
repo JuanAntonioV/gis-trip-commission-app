@@ -50,7 +50,7 @@ export const columns: ColumnDef<Trip>[] = [
         cell: ({ row }) => (
             <div className="flex items-center space-x-2">
                 <Button variant="secondary" size={'icon'} asChild>
-                    <Link href={route('deliveries.show', row.original.id)} className="flex items-center gap-2">
+                    <Link href={route('trips.show', row.original.id)} className="flex items-center gap-2">
                         <Search />
                     </Link>
                 </Button>

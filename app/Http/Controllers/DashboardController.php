@@ -47,8 +47,8 @@ class DashboardController extends Controller
                 return $query->where('driver_id', $userId)->orWhere('helper_id', $userId);
             })->latest()->take(5)->get();
 
-        $latestTrips = \App\Models\Trip::with(['delivery.vehicle', 'delivery.driver', 'delivery.helper'])
-            ->withCount('items as items_items')
+        $latestTrips = \App\Models\Trip::with(['delivery.vehicle', 'delivery.driver', 'delivery.helper', 'destinationLocation', 'status'])
+            ->withCount('items as total_items')
             ->when(!$isAdmin, function ($query) use ($userId) {
                 return $query->whereHas('delivery', function ($query) use ($userId) {
                     $query->where('driver_id', $userId)

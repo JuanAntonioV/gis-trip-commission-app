@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -17,6 +18,8 @@ import TextareaInput from './ui/TextareaInput';
 type Props = {
     id: number; // Assuming delivery ID is a number
     deliveryId?: string; // Optional delivery ID for context
+    btnClassName?: string; // Optional for button styling
+    withRedirect?: boolean; // Optional prop to determine if redirect is needed
 };
 
 type FormType = {
@@ -24,7 +27,7 @@ type FormType = {
     cancel_reason: string;
 };
 
-const CancelTripButton = ({ id, deliveryId }: Props) => {
+const CancelTripButton = ({ id, deliveryId, btnClassName, withRedirect = true }: Props) => {
     const errors = useForm().errors; // Get errors from the form
     console.log('🚀 ~ CancelTripButton ~ errors:', errors);
 
@@ -46,10 +49,12 @@ const CancelTripButton = ({ id, deliveryId }: Props) => {
             onSuccess: () => {
                 // Handle success, e.g., show a toast notification
                 toast.success('Pengiriman berhasil dibatalkan');
-                if (deliveryId) {
-                    router.visit(route('deliveries.showMaps', deliveryId));
-                } else {
-                    router.visit(route('dashboard'));
+                if (withRedirect) {
+                    if (deliveryId) {
+                        router.visit(route('deliveries.showMaps', deliveryId));
+                    } else {
+                        router.visit(route('dashboard'));
+                    }
                 }
                 resetAndClearErrors(); // Reset form data and errors
                 setOpen(false);
@@ -64,7 +69,7 @@ const CancelTripButton = ({ id, deliveryId }: Props) => {
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
-                <Button variant={'destructive'} className="w-full" type="button" loading={processing}>
+                <Button variant={'destructive'} className={cn('w-full', btnClassName)} type="button" loading={processing}>
                     Batalkan
                 </Button>
             </AlertDialogTrigger>

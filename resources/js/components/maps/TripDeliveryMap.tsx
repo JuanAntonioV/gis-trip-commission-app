@@ -21,11 +21,16 @@ const TripDeliveryMap = () => {
     const currentLocation = useGeoLocation({
         onError: (error) => {
             console.error(error);
+            toast.error('Gagal mendapatkan lokasi saat ini. Pastikan izin lokasi telah diberikan.', {
+                onAutoClose: () => {
+                    router.visit(route('dashboard'));
+                },
+            });
         },
     });
     const defaultLocation = useMemo<{ lat: number; lng: number }>(() => {
-        if (currentLocation.loaded) {
-            return { lat: currentLocation.coordinates?.lat as number, lng: currentLocation.coordinates?.lng as number };
+        if (currentLocation.loaded && currentLocation.coordinates) {
+            return { lat: currentLocation.coordinates.lat, lng: currentLocation.coordinates.lng };
         }
 
         return { lat: 3.595226750097991, lng: 98.67200113297093 };
@@ -327,14 +332,10 @@ const TripDeliveryMap = () => {
                         </Button>
                         <CreateTripStopButton
                             deliveryId={delivery.id}
-                            currentLocation={
-                                currentLocation.loaded
-                                    ? {
-                                          latitude: currentLocation.coordinates!.lat.toString(),
-                                          longitude: currentLocation.coordinates!.lng.toString(),
-                                      }
-                                    : { latitude: defaultLocation.lat.toString(), longitude: defaultLocation.lng.toString() }
-                            }
+                            currentLocation={{
+                                latitude: defaultLocation.lat.toString(),
+                                longitude: defaultLocation.lng.toString(),
+                            }}
                         />
                     </footer>
                 </form>

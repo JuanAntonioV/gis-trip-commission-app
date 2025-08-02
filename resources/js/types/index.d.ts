@@ -175,6 +175,8 @@ export interface Trip {
     updated_at: string;
     total_items: number;
     delivery: Delivery;
+    destination_location: Location; // Relationship to Location
+    items: DeliveryItem[]; // Relationship to DeliveryItem
 }
 
 export type MapRange = {

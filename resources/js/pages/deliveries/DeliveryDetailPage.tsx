@@ -72,7 +72,7 @@ const DeliveryDetailPage = () => {
                     <HeadingSmall title="Daftar Barang" description="Daftar barang yang dikirimkan dalam pengiriman ini." className="mt-10" />
                     <Separator className="my-4" />
                     <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                        <LabelItem label="Total Barang" value={delivery.total_items || 0} />
+                        <LabelItem label="Total Barang" value={formatNumber(delivery.total_items)} />
                         <LabelItem label="Total Berat" value={`${formatNumber(delivery.items.reduce((acc, item) => acc + item.weight, 0))} kg`} />
                         <LabelItem label="Total Lokasi" value={delivery.items.length} />
                     </div>

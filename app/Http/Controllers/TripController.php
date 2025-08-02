@@ -26,6 +26,21 @@ class TripController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        $isAdmin = Auth::user()->hasRole('admin') || Auth::user()->hasRole('super admin');
+
+        $trip = \App\Models\Trip::with(['delivery.vehicle', 'delivery.driver', 'delivery.helper', 'delivery.status', 'status', 'destinationLocation', 'items.location'])
+            ->withCount('items as total_items')
+            ->where('id', $id)
+            ->firstOrFail();
+
+        return Inertia::render('trips/TripDetailPage', [
+            'trip' => $trip,
+            'isAdmin' => $isAdmin,
+        ]);
+    }
+
     public function startTrip(Request $request)
     {
         $request->validate([
