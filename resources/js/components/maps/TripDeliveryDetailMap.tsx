@@ -1,3 +1,4 @@
+import { TRIP_STATUSES } from '@/constants';
 import useGeoLocation from '@/hooks/useGeoLocation';
 import { Delivery, DeliveryItemWithMapInfo, Trip } from '@/types';
 import { router, usePage } from '@inertiajs/react';
@@ -8,6 +9,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import CancelTripButton from '../CancelTripButton';
 import CompleteTripButton from '../CompleteTripButton';
 import HeadingSmall from '../heading-small';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Separator } from '../ui/separator';
@@ -59,7 +61,7 @@ const TripDeliveryDetailMap = () => {
         if (!map || !currentLocation.loaded || renderRef.current) return;
         // Set current location marker
         if (currentLocation.loaded && currentLocation.coordinates) {
-            const marker = new google.maps.Marker({
+            let marker = new google.maps.Marker({
                 position: {
                     lat: currentLocation.coordinates.lat,
                     lng: currentLocation.coordinates.lng,
@@ -67,6 +69,18 @@ const TripDeliveryDetailMap = () => {
                 map,
                 title: 'Lokasi Saat Ini',
             });
+
+            if (trip.status.id !== TRIP_STATUSES.IN_PROGRESS) {
+                marker = new google.maps.Marker({
+                    position: {
+                        lat: Number(trip.origin_latitude),
+                        lng: Number(trip.origin_longitude),
+                    },
+                    map,
+                    title: 'Lokasi Awal Trip',
+                });
+            }
+
             setCurrentLocationMarker(marker);
             renderRef.current = 1; // Prevent re-rendering
         } else if (currentLocationMarker) {
@@ -76,12 +90,19 @@ const TripDeliveryDetailMap = () => {
         }
 
         // Center map on current location
-        map.setCenter({
-            lat: currentLocation.coordinates?.lat || defaultLocation.lat,
-            lng: currentLocation.coordinates?.lng || defaultLocation.lng,
-        });
+        if (trip.status.id === TRIP_STATUSES.IN_PROGRESS) {
+            map.setCenter({
+                lat: currentLocation.coordinates?.lat || defaultLocation.lat,
+                lng: currentLocation.coordinates?.lng || defaultLocation.lng,
+            });
+        } else {
+            map.setCenter({
+                lat: Number(trip.origin_latitude),
+                lng: Number(trip.origin_longitude),
+            });
+        }
         map.setZoom(15);
-    }, [currentLocation, currentLocationMarker, map]);
+    }, [currentLocation, currentLocationMarker, map, defaultLocation, trip]);
 
     useEffect(() => {
         if (!map || !delivery || !defaultLocation || !delivery) return;
@@ -91,7 +112,17 @@ const TripDeliveryDetailMap = () => {
         if (deliveryItems.length > 0) {
             const service = new google.maps.DistanceMatrixService();
 
-            const origins = [defaultLocation];
+            const origins: google.maps.LatLngLiteral[] = [];
+
+            if (trip.status.id === TRIP_STATUSES.IN_PROGRESS) {
+                origins.push(defaultLocation);
+            } else {
+                origins.push({
+                    lat: Number(trip.origin_latitude),
+                    lng: Number(trip.origin_longitude),
+                });
+            }
+
             const destinations = deliveryItems.map((item) => ({
                 lat: Number(item.location.latitude),
                 lng: Number(item.location.longitude),
@@ -126,7 +157,7 @@ const TripDeliveryDetailMap = () => {
                 },
             );
         }
-    }, [map, defaultLocation, delivery]);
+    }, [map, defaultLocation, delivery, trip]);
 
     const [selectedTrip, setSelectedTrip] = useState<DeliveryItemWithMapInfo | null>(null);
 
@@ -161,9 +192,21 @@ const TripDeliveryDetailMap = () => {
 
         directionsRenderer.setMap(map);
 
+        let origins: google.maps.LatLngLiteral = {
+            lat: Number(defaultLocation.lat),
+            lng: Number(defaultLocation.lng),
+        };
+
+        if (trip.status.id !== TRIP_STATUSES.IN_PROGRESS) {
+            origins = {
+                lat: Number(trip.origin_latitude),
+                lng: Number(trip.origin_longitude),
+            };
+        }
+
         directionsService.route(
             {
-                origin: defaultLocation,
+                origin: origins,
                 destination: {
                     lat: Number(selectedTrip.location.latitude),
                     lng: Number(selectedTrip.location.longitude),
@@ -178,7 +221,7 @@ const TripDeliveryDetailMap = () => {
                 }
             },
         );
-    }, [map, selectedTrip, defaultLocation]);
+    }, [map, selectedTrip, defaultLocation, trip, currentLocationMarker]);
 
     const handleRedirectGoogleMaps = () => {
         if (selectedTrip) {
@@ -277,23 +320,34 @@ const TripDeliveryDetailMap = () => {
                         </div>
                     )}
 
-                    <footer className="mt-8 grid w-full grid-cols-2 gap-4">
-                        <CompleteTripButton
-                            id={trip.id}
-                            currentLocation={{
-                                latitude: currentLocation.coordinates?.lat.toString() || defaultLocation.lat.toString(),
-                                longitude: currentLocation.coordinates?.lng.toString() || defaultLocation.lng.toString(),
-                            }}
-                        />
-                        <CancelTripButton id={trip.id} deliveryId={trip.delivery_id} />
+                    {trip.status.id !== TRIP_STATUSES.COMPLETED && trip.status.id !== TRIP_STATUSES.CANCELLED ? (
+                        <footer className="mt-8 grid max-h-[200px] w-full grid-cols-2 gap-4 overflow-y-auto">
+                            <CompleteTripButton
+                                id={trip.id}
+                                currentLocation={{
+                                    latitude: currentLocation.coordinates?.lat.toString() || defaultLocation.lat.toString(),
+                                    longitude: currentLocation.coordinates?.lng.toString() || defaultLocation.lng.toString(),
+                                }}
+                            />
+                            <CancelTripButton id={trip.id} deliveryId={trip.delivery_id} />
 
-                        {selectedTrip && (
-                            <Button variant={'ghost'} className="col-span-2 w-full py-4" type="button" onClick={handleRedirectGoogleMaps}>
-                                <MapPlus />
-                                Tautan Lokasi
-                            </Button>
-                        )}
-                    </footer>
+                            {selectedTrip && (
+                                <Button variant={'ghost'} className="col-span-2 w-full py-4" type="button" onClick={handleRedirectGoogleMaps}>
+                                    <MapPlus />
+                                    Tautan Lokasi
+                                </Button>
+                            )}
+                        </footer>
+                    ) : (
+                        <footer className="mt-8 grid max-h-[200px] w-full grid-cols-2 gap-4 overflow-y-auto">
+                            <Alert className="col-span-2 w-full" variant={'destructive'}>
+                                <AlertTitle>Perhatian!</AlertTitle>
+                                <AlertDescription>
+                                    Trip ini sudah selesai atau dibatalkan. Anda tidak dapat melakukan tindakan lebih lanjut.
+                                </AlertDescription>
+                            </Alert>
+                        </footer>
+                    )}
                 </form>
             </div>
         </div>
