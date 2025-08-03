@@ -106,8 +106,8 @@ class TripController extends Controller
                 }
             }
 
-            $lastTripStop = $delivery->tripStops()->latest()->first();
-            if ($lastTripStop) {
+            $lastTripStops = $delivery->tripStops()->latest()->get();
+            foreach ($lastTripStops as $lastTripStop) {
                 $lastTripStop->after_trip_id = $trip->id;
                 $lastTripStop->save();
             }
