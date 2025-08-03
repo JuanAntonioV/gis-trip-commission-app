@@ -17,6 +17,7 @@ class TripStopController extends Controller
             'latitude' => 'required|string',
             'longitude' => 'required|string',
             'starting_km' => 'required|numeric',
+            'notes' => 'nullable|string|max:500',
         ]);
 
         $deliveryId = $request->input('delivery_id');
@@ -24,6 +25,7 @@ class TripStopController extends Controller
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
         $startingKm = $request->input('starting_km');
+        $notes = $request->input('notes', '');
 
         $delivery = \App\Models\Delivery::findOrFail($deliveryId);
 
@@ -36,6 +38,7 @@ class TripStopController extends Controller
             'origin_longitude' => $longitude,
             'starting_km' => $startingKm,
             'start_time' => now(),
+            'notes' => $notes,
             'status' => TripStatusEntities::IN_PROGRESS,
             'before_trip_id' => $lastTrip ? $lastTrip->id : null,
         ];
