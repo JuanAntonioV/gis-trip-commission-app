@@ -126,16 +126,14 @@ const CreateDeliveryForm = () => {
                     <Input
                         type="time"
                         id="time-picker"
-                        step="1"
                         defaultValue="09:00:00"
                         onChange={(e) => {
                             const time = e.target.value;
-                            const date = data.scheduled_at ? dayjs(data.scheduled_at) : dayjs();
-                            const newDate = date
-                                .hour(Number(time.split(':')[0]))
-                                .minute(Number(time.split(':')[1]))
-                                .toDate();
-                            setData('scheduled_at', newDate);
+                            if (time) {
+                                const timeDate = dayjs().format('YYYY-MM-DD') + 'T' + time;
+                                const scheduledAt = dayjs(timeDate).toDate();
+                                setData('scheduled_at', scheduledAt);
+                            }
                         }}
                         value={data.scheduled_at ? dayjs(data.scheduled_at).format('HH:mm') : ''}
                         placeholder="HH:mm"
