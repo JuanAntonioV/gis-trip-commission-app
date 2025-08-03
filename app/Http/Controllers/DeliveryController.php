@@ -218,4 +218,36 @@ class DeliveryController extends Controller
 
         return redirect()->route('deliveries.index')->with('success', 'Delivery created successfully.');
     }
+
+    public function cancel(Request $request)
+    {
+        $data = $request->validate([
+            'delivery_id' => 'required|exists:deliveries,id',
+            'reason' => 'required|string|max:255',
+        ]);
+
+        $delivery = \App\Models\Delivery::findOrFail($data['delivery_id']);
+        if ($delivery->status !== DeliveryStatusEntities::PENDING) {
+            return redirect()->back()->withErrors(['message' => 'Only pending deliveries can be cancelled.']);
+        }
+
+        DB::beginTransaction();
+        try {
+            $delivery->status = DeliveryStatusEntities::CANCELLED;
+            $delivery->cancelled_at = now();
+            $delivery->cancel_reason = $data['reason'];
+            $delivery->cancelled_by = Auth::id();
+            $delivery->save();
+
+            \App\Models\Trip::where('delivery_id', $delivery->id)
+                ->update(['status' => TripStatusEntities::CANCELLED, 'cancellation_reason' => 'Delivery cancelled: ' . $data['reason']]);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['message' => 'Failed to cancel delivery: ' . $e->getMessage()]);
+        }
+
+        return redirect()->route('deliveries.index')->with('success', 'Delivery cancelled successfully.');
+    }
 }
