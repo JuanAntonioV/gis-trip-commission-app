@@ -37,7 +37,7 @@ class CommissionReportExport implements FromCollection, WithHeadings
             ->select(
                 DB::raw('COUNT(trips.id) as total_trips'),
                 DB::raw('SUM(trips.trip_distance) as total_distance'),
-                DB::raw('SUM(trips.trip_duration) as total_duration'),
+                DB::raw('SUM(trips.trip_duration / 60) as total_duration'),
                 'drivers.id as driver_id',
                 'drivers.name as driver_name',
                 'helpers.name as helper_name',
