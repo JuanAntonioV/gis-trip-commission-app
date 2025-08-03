@@ -42,8 +42,6 @@ class DeliveryController extends Controller
             ->withCount('items as total_items')
             ->findOrFail($id);
 
-        dd($delivery->toArray());
-
         return Inertia::render('deliveries/DeliveryMapsPage', [
             'delivery' => $delivery,
             'isAdmin' => $isAdmin,
