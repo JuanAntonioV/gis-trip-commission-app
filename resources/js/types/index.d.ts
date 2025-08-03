@@ -206,3 +206,15 @@ export type TripStop = {
     updated_at: string; // ISO date string
     delivery: Delivery; // Relationship to Delivery
 };
+
+export type ReportCommission = {
+    driver_id: number;
+    helper_id: number | null;
+    total_trips: number;
+    total_distance: number;
+    total_duration: number;
+    driver_name: string;
+    helper_name: string | null;
+    total_commission: number;
+    last_trip_date: string; // ISO date string
+};

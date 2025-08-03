@@ -21,7 +21,6 @@ return new class extends Migration
 
             $table->dateTime('started_at')->nullable();
             $table->dateTime('finished_at')->nullable();
-            $table->dateTime('confirmed_at')->nullable();
 
             $table->foreignId('status')->constrained('delivery_statuses')->onDelete('cascade');
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');

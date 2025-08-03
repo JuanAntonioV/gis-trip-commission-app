@@ -76,12 +76,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/complete', [\App\Http\Controllers\TripStopController::class, 'completeTripStop'])->name('trip-stops.complete');
     });
 
-    // Route::get('/buat-laporan', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
-
-    // Route::prefix('reports')->group(function () {
-    //     Route::post('/generate', [\App\Http\Controllers\ReportController::class, 'generate'])->name('reports.generate');
-    //     Route::get('/download/{report}', [\App\Http\Controllers\ReportController::class, 'download'])->name('reports.download');
-    // });
+    Route::get('/laporan-komisi', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
+    Route::get('/laporan-komisi/{userId}', [\App\Http\Controllers\ReportController::class, 'show'])->name('reports.show');
 });
 
 require __DIR__ . '/settings.php';
