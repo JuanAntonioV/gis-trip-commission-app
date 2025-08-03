@@ -1,4 +1,5 @@
 import CancelTripButton from '@/components/CancelTripButton';
+import { DataTable } from '@/components/DataTable';
 import Heading from '@/components/heading';
 import HeadingSmall from '@/components/heading-small';
 import LabelItem from '@/components/LabelItem';
@@ -8,14 +9,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { TRIP_STATUS_COLORS, TRIP_STATUSES } from '@/constants';
 import AppLayout from '@/layouts/app-layout';
 import { cn, formatNumber } from '@/lib/utils';
-import { Trip } from '@/types';
+import { Trip, TripStop } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import dayjs from 'dayjs';
+import { tripStopColumns } from './tripStopColumns';
 
 const TripDetailPage = () => {
     const serverProps = usePage().props;
     const trip = serverProps.trip as Trip;
     const isAdmin = (serverProps.isAdmin as boolean) || false;
+    const tripStops = serverProps.tripStops as TripStop[];
     return (
         <AppLayout>
             <Head title={`Trip Detail - ${trip.destination_location.name}`} />
@@ -93,6 +96,14 @@ const TripDetailPage = () => {
                             <CancelTripButton id={trip.id} btnClassName="w-fit" withRedirect={false} />
                         </div>
                     )}
+                </section>
+
+                <section className="mt-6 section">
+                    <HeadingSmall title="Riwayat Perhentian" description="Riwayat perhentian yang dilakukan selama trip ini." />
+
+                    <Separator className="my-4" />
+
+                    <DataTable columns={tripStopColumns} data={tripStops} dataKey={'tripStops'} />
                 </section>
             </main>
         </AppLayout>

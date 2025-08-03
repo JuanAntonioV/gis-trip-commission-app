@@ -83,4 +83,9 @@ class Delivery extends Model
     {
         return $this->hasMany(Trip::class);
     }
+
+    public function tripStops()
+    {
+        return $this->hasMany(TripStop::class);
+    }
 }

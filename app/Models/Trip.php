@@ -31,6 +31,11 @@ class Trip extends Model
         return $this->belongsTo(TripStatus::class, 'status');
     }
 
+    public function tripStops()
+    {
+        return $this->hasMany(TripStop::class, 'after_trip_id');
+    }
+
     // public function deliveryReports()
     // {
     //     return $this->belongsToMany(DeliveryReport::class, 'delivery_report_trips', 'trip_id', 'delivery_id')

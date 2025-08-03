@@ -27,6 +27,8 @@ class TripStopController extends Controller
 
         $delivery = \App\Models\Delivery::findOrFail($deliveryId);
 
+        $lastTrip = $delivery->trips()->latest()->first();
+
         $data = [
             'delivery_id' => $deliveryId,
             'destination_name' => $destinationName,
@@ -35,6 +37,7 @@ class TripStopController extends Controller
             'starting_km' => $startingKm,
             'start_time' => now(),
             'status' => TripStatusEntities::IN_PROGRESS,
+            'before_trip_id' => $lastTrip ? $lastTrip->id : null,
         ];
 
         DB::beginTransaction();

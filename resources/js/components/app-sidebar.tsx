@@ -49,7 +49,7 @@ const mainNavItems: NavItem[] = [
         title: 'Kelola Karyawan',
         href: '/kelola-karyawan',
         icon: Users,
-        role: ['super admin', 'admin'],
+        role: ['super admin'],
     },
     {
         title: 'Laporan Komisi',

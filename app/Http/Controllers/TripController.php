@@ -17,10 +17,6 @@ class TripController extends Controller
     public function index()
     {
         $trips = \App\Models\Trip::with(['delivery.vehicle', 'delivery.driver', 'delivery.helper', 'delivery.status', 'status', 'destinationLocation'])
-            ->select(
-                '*',
-                DB::raw('trips.ending_km - trips.starting_km as trip_distance')
-            )
             ->withCount('items as total_items')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -39,9 +35,13 @@ class TripController extends Controller
             ->where('id', $id)
             ->firstOrFail();
 
+        $tripStops = $trip->tripStops()
+            ->with('status')->latest()->get();
+
         return Inertia::render('trips/TripDetailPage', [
             'trip' => $trip,
             'isAdmin' => $isAdmin,
+            'tripStops' => $tripStops,
         ]);
     }
 
@@ -95,6 +95,12 @@ class TripController extends Controller
                 foreach ($selectedTrips as $item) {
                     $trip->items()->attach($item->id);
                 }
+            }
+
+            $lastTripStop = $delivery->tripStops()->latest()->first();
+            if ($lastTripStop) {
+                $lastTripStop->after_trip_id = $trip->id;
+                $lastTripStop->save();
             }
 
             if ($delivery->status !== DeliveryStatusEntities::IN_PROGRESS) {

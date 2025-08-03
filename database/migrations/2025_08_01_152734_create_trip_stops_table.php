@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('trip_stops', function (Blueprint $table) {
             $table->id();
             $table->string('delivery_id')->constrained('deliveries')->onDelete('cascade');
+            $table->unsignedInteger('after_trip_id')->nullable(); // ID trip sebelumnya jika ada
+            $table->unsignedInteger('before_trip_id')->nullable(); // ID trip berikutnya jika ada
+
             $table->string('destination_name');
 
             $table->string('origin_latitude'); // Latitude asal trip

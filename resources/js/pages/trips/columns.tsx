@@ -51,7 +51,17 @@ export const columns: ColumnDef<Trip>[] = [
             const diffInSeconds = dayjs(getValue<Date>()).diff(dayjs(row.original.start_time), 'second');
             const minutes = Math.floor(diffInSeconds / 60);
             const seconds = diffInSeconds % 60;
-            return `${minutes} menit ${seconds} detik`;
+            return `${minutes || 0} menit ${seconds || 0} detik`;
+        },
+    },
+    {
+        accessorKey: 'end_time',
+        header: 'Total Komisi',
+        cell: ({ getValue, row }) => {
+            const diffInSeconds = dayjs(getValue<Date>()).diff(dayjs(row.original.start_time), 'second');
+            const minutes = Math.floor(diffInSeconds / 60);
+            const seconds = diffInSeconds % 60;
+            return 'Rp ' + formatNumber(minutes + seconds / 60 || 0);
         },
     },
     {
