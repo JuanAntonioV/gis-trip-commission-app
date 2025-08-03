@@ -89,7 +89,7 @@ const CreateTripStopButton = ({ deliveryId, currentLocation }: Props) => {
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent className="sm:max-w-[420px]">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} id="create-trip-stop-form">
                     <AlertDialogHeader>
                         <AlertDialogTitle>Tambah Tujuan?</AlertDialogTitle>
 
@@ -131,7 +131,7 @@ const CreateTripStopButton = ({ deliveryId, currentLocation }: Props) => {
                     </AlertDialogHeader>
                     <AlertDialogFooter className="mt-4">
                         <AlertDialogCancel>Kembali</AlertDialogCancel>
-                        <Button type="submit" loading={processing} className="bg-green-500 hover:bg-green-600">
+                        <Button form="create-trip-stop-form" type="submit" loading={processing} className="bg-green-500 hover:bg-green-600">
                             <CheckCircle />
                             Simpan
                         </Button>
