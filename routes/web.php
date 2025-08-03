@@ -76,6 +76,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/complete', [\App\Http\Controllers\TripStopController::class, 'completeTripStop'])->name('trip-stops.complete');
     });
 
+    Route::get('/laporan-komisi/export', [\App\Http\Controllers\ReportController::class, 'export'])->name('reports.export');
     Route::get('/laporan-komisi', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
     Route::get('/laporan-komisi/{userId}', [\App\Http\Controllers\ReportController::class, 'show'])->name('reports.show');
 });

@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Entities\DeliveryStatusEntities;
 use App\Entities\TripStatusEntities;
+use App\Exports\CommissionReportExport;
 use App\Models\Delivery;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
@@ -86,5 +88,13 @@ class ReportController extends Controller
             'report' => Inertia::defer(fn() => $report),
             'allTrips' => Inertia::defer(fn() => $allTrips),
         ]);
+    }
+
+    public function export(Request $request)
+    {
+        $from = $request->query('from', Carbon::now()->subDays(30)->startOfDay()->toDateString());
+        $to = $request->query('to', Carbon::now()->endOfDay()->toDateString());
+
+        return Excel::download(new CommissionReportExport($from, $to), 'laporan_komisi.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 }
