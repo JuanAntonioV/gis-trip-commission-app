@@ -34,11 +34,11 @@ export const columns: ColumnDef<Trip>[] = [
         header: 'Kernek',
         cell: ({ getValue }) => `${getValue() || '-'}`,
     },
-    {
-        accessorKey: 'total_items',
-        header: 'Total Barang',
-        cell: ({ getValue }) => (getValue() ? formatNumber(getValue() as number) : '0'),
-    },
+    // {
+    //     accessorKey: 'total_items',
+    //     header: 'Total Barang',
+    //     cell: ({ getValue }) => (getValue() ? formatNumber(getValue() as number) : '0'),
+    // },
     {
         accessorKey: 'ending_km',
         header: 'Total Jarak (km)',
