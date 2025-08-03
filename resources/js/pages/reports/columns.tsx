@@ -48,35 +48,59 @@ export const columns: ColumnDef<ReportCommission>[] = [
         accessorKey: 'actions',
         header: 'Aksi',
         enableSorting: false,
-        cell: ({ row }) => (
-            <div className="flex items-center space-x-2">
-                <Tooltip>
-                    <TooltipTrigger>
-                        <Button variant="secondary" size={'icon'} asChild>
-                            <Link href={route('reports.show', row.original.driver_id)} className="flex items-center gap-2">
-                                <Truck />
-                            </Link>
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Lihat Riwayat Trip Pengemudi</p>
-                    </TooltipContent>
-                </Tooltip>
-                {row.original.helper_id && (
+        cell: ({ row }) => {
+            const queryParams = new URLSearchParams(window.location.search);
+            const from = queryParams.get('from');
+            const to = queryParams.get('to');
+
+            return (
+                <div className="flex items-center space-x-2">
                     <Tooltip>
                         <TooltipTrigger>
                             <Button variant="secondary" size={'icon'} asChild>
-                                <Link href={route('reports.show', row.original.helper_id)} className="flex items-center gap-2">
+                                <Link
+                                    href={
+                                        route('reports.show', {
+                                            id: row.original.driver_id,
+                                        }) +
+                                        (from ? `?from=${from}` : '') +
+                                        (to ? `&to=${to}` : '')
+                                    }
+                                    className="flex items-center gap-2"
+                                >
                                     <Truck />
                                 </Link>
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                            <p>Lihat Riwayat Trip</p>
+                            <p>Lihat Riwayat Trip Pengemudi</p>
                         </TooltipContent>
                     </Tooltip>
-                )}
-            </div>
-        ),
+                    {row.original.helper_id && (
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <Button variant="secondary" size={'icon'} asChild>
+                                    <Link
+                                        href={
+                                            route('reports.show', {
+                                                id: row.original.helper_id,
+                                            }) +
+                                            (from ? `?from=${from}` : '') +
+                                            (to ? `&to=${to}` : '')
+                                        }
+                                        className="flex items-center gap-2"
+                                    >
+                                        <Truck />
+                                    </Link>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Lihat Riwayat Trip</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    )}
+                </div>
+            );
+        },
     },
 ];
