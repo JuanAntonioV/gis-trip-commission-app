@@ -4,25 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Entities\DeliveryStatusEntities;
 use App\Entities\TripStatusEntities;
+use App\Exports\TripReportExport;
 use App\Models\Trip;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 use Termwind\Components\Raw;
 
 class TripController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+
+        $from = $request->query('from', Carbon::now()->startOfMonth()->startOfDay()->toDateString());
+        $to = $request->query('to', Carbon::now()->endOfMonth()->endOfDay()->toDateString());
+
         $trips = \App\Models\Trip::with(['delivery.vehicle', 'delivery.driver', 'delivery.helper', 'delivery.status', 'status', 'destinationLocation'])
+            ->whereBetween('created_at', [$from, $to])
             ->withCount('items as total_items')
             ->orderBy('created_at', 'desc')
             ->get();
 
         return Inertia::render('trips/ManageTripPage', [
-            'trips' => $trips
+            'trips' => $trips,
+            'from' => $from,
+            'to' => $to,
         ]);
     }
 
@@ -210,5 +219,13 @@ class TripController extends Controller
             'delivery' => $trip->delivery_id,
             'tripId' => $trip->id,
         ])->with('success', 'Trip completed successfully.');
+    }
+
+    public function export(Request $request)
+    {
+        $from = $request->query('from', Carbon::now()->subDays(30)->startOfDay()->toDateString());
+        $to = $request->query('to', Carbon::now()->endOfDay()->toDateString());
+
+        return Excel::download(new TripReportExport($from, $to), 'laporan_trip.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 }

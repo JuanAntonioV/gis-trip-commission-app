@@ -16,8 +16,8 @@ class ReportController extends Controller
 {
     public function index(Request $request)
     {
-        $from = $request->query('from', Carbon::now()->subDays(30)->startOfDay()->toDateString());
-        $to = $request->query('to', Carbon::now()->endOfDay()->toDateString());
+        $from = $request->query('from', Carbon::now()->startOfMonth()->startOfDay()->toDateString());
+        $to = $request->query('to', Carbon::now()->endOfMonth()->endOfDay()->toDateString());
 
         $reports = DB::table('trips')
             ->join('deliveries', 'trips.delivery_id', '=', 'deliveries.id')
@@ -43,13 +43,15 @@ class ReportController extends Controller
 
         return Inertia::render('reports/ManageReportPage', [
             'reports' => Inertia::defer(fn() => $reports),
+            'from' => $from,
+            'to' => $to,
         ]);
     }
 
     public function show(Request $request, $id)
     {
-        $from = $request->query('from', Carbon::now()->subDays(30)->startOfDay()->toDateString());
-        $to = $request->query('to', Carbon::now()->endOfDay()->toDateString());
+        $from = $request->query('from', Carbon::now()->startOfMonth()->startOfDay()->toDateString());
+        $to = $request->query('to', Carbon::now()->endOfMonth()->endOfDay()->toDateString());
 
         $report = DB::table('trips')
             ->join('deliveries', 'trips.delivery_id', '=', 'deliveries.id')

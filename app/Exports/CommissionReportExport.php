@@ -53,13 +53,13 @@ class CommissionReportExport implements FromCollection, WithHeadings
             return [
                 'driver_id' => $report->driver_id,
                 'driver_name' => $report->driver_name,
-                'helper_id' => $report->helper_id,
-                'helper_name' => $report->helper_name,
-                'total_trips' => $report->total_trips,
-                'total_distance' => $report->total_distance,
-                'total_duration' => $report->total_duration,
-                'total_commission' => $report->total_commission,
-                'last_trip_date' => Carbon::parse($report->last_trip_date)->format('Y-m-d H:i:s'),
+                'helper_id' => $report->helper_id ?? '-',
+                'helper_name' => $report->helper_name ?? '-',
+                'total_trips' => $report->total_trips ?? 0,
+                'total_distance' => $report->total_distance ?? 0,
+                'total_duration' => $report->total_duration ?? 0,
+                'total_commission' => $report->total_commission ?? 0,
+                'last_trip_date' => $report->last_trip_date ? Carbon::parse($report->last_trip_date)->format('Y-m-d H:i:s') : '-',
             ];
         });
     }
