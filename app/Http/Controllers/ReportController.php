@@ -22,6 +22,7 @@ class ReportController extends Controller
             ->join('users as drivers', 'deliveries.driver_id', '=', 'drivers.id')
             ->leftJoin('users as helpers', 'deliveries.helper_id', '=', 'helpers.id')
             ->where('deliveries.status', DeliveryStatusEntities::COMPLETED)
+            ->where('trips.status', TripStatusEntities::COMPLETED)
             ->whereBetween('deliveries.created_at', [$from, $to])
             ->select(
                 DB::raw('COUNT(trips.id) as total_trips'),
