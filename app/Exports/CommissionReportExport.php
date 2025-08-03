@@ -48,7 +48,19 @@ class CommissionReportExport implements FromCollection
             // ->groupBy('deliveries.helper_id')
             ->get();
 
-        return $reports;
+        return $reports->map(function ($report) {
+            return [
+                'driver_id' => $report->driver_id,
+                'driver_name' => $report->driver_name,
+                'helper_id' => $report->helper_id,
+                'helper_name' => $report->helper_name,
+                'total_trips' => $report->total_trips,
+                'total_distance' => $report->total_distance,
+                'total_duration' => $report->total_duration,
+                'total_commission' => $report->total_commission,
+                'last_trip_date' => Carbon::parse($report->last_trip_date)->format('Y-m-d H:i:s'),
+            ];
+        });
     }
 
     public function headings(): array
