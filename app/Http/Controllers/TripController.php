@@ -17,6 +17,10 @@ class TripController extends Controller
     public function index()
     {
         $trips = \App\Models\Trip::with(['delivery.vehicle', 'delivery.driver', 'delivery.helper', 'delivery.status', 'status', 'destinationLocation'])
+            ->select(
+                '*',
+                DB::raw('trips.ending_km - trips.starting_km as trip_distance')
+            )
             ->withCount('items as total_items')
             ->orderBy('created_at', 'desc')
             ->get();

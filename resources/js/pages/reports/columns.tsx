@@ -31,7 +31,12 @@ export const columns: ColumnDef<ReportCommission>[] = [
     {
         accessorKey: 'total_duration',
         header: 'Total Durasi',
-        cell: ({ getValue }) => formatNumber(getValue<number>()) + ' menit',
+        cell: ({ getValue }) => {
+            const totalSeconds = getValue<number>();
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `${minutes} menit ${seconds} detik`;
+        },
     },
 
     {
@@ -76,7 +81,7 @@ export const columns: ColumnDef<ReportCommission>[] = [
                             <p>Lihat Riwayat Trip Pengemudi</p>
                         </TooltipContent>
                     </Tooltip>
-                    {row.original.helper_id && (
+                    {/* {row.original.helper_id && (
                         <Tooltip>
                             <TooltipTrigger>
                                 <Button variant="secondary" size={'icon'} asChild>
@@ -95,10 +100,10 @@ export const columns: ColumnDef<ReportCommission>[] = [
                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p>Lihat Riwayat Trip</p>
+                                <p>Lihat Riwayat Trip Kernek</p>
                             </TooltipContent>
                         </Tooltip>
-                    )}
+                    )} */}
                 </div>
             );
         },

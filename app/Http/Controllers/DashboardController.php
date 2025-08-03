@@ -42,6 +42,7 @@ class DashboardController extends Controller
         })->where('status', TripStatusEntities::COMPLETED)->count();
 
         $latestDeliveries = \App\Models\Delivery::with(['vehicle', 'driver', 'helper', 'status', 'items.location'])
+            ->where('scheduled_at', '>=', now()->subDays(7))
             ->withCount('items as total_items')
             ->when(!$isAdmin, function ($query) use ($userId) {
                 return $query->where('driver_id', $userId)->orWhere('helper_id', $userId);

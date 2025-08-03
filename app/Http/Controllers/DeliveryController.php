@@ -54,6 +54,9 @@ class DeliveryController extends Controller
         $isAdmin = $userRole === 'admin' || $userRole === 'super admin';
 
         $delivery = \App\Models\Delivery::with(['vehicle', 'driver', 'helper', 'status', 'items.location', 'staff', 'cancelledStaff'])
+            ->whereHas('items.tripItem.trip', function ($query) use ($tripId) {
+                $query->where('id', $tripId);
+            })
             ->withCount('items as total_items')
             ->findOrFail($id);
 

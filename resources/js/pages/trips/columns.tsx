@@ -5,6 +5,7 @@ import { cn, formatNumber } from '@/lib/utils';
 import { Trip } from '@/types';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
+import dayjs from 'dayjs';
 import { Search } from 'lucide-react';
 
 export const columns: ColumnDef<Trip>[] = [
@@ -37,6 +38,21 @@ export const columns: ColumnDef<Trip>[] = [
         accessorKey: 'total_items',
         header: 'Total Barang',
         cell: ({ getValue }) => (getValue() ? formatNumber(getValue() as number) : '0'),
+    },
+    {
+        accessorKey: 'ending_km',
+        header: 'Total Jarak (km)',
+        cell: ({ getValue, row }) => (getValue() ? formatNumber(getValue<number>() - row.original.starting_km) : '0') + ' km',
+    },
+    {
+        accessorKey: 'end_time',
+        header: 'Total Waktu',
+        cell: ({ getValue, row }) => {
+            const diffInSeconds = dayjs(getValue<Date>()).diff(dayjs(row.original.start_time), 'second');
+            const minutes = Math.floor(diffInSeconds / 60);
+            const seconds = diffInSeconds % 60;
+            return `${minutes} menit ${seconds} detik`;
+        },
     },
     {
         accessorKey: 'status.name',

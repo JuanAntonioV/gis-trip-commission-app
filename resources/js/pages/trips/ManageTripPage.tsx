@@ -10,6 +10,7 @@ type Props = {
 };
 
 const ManageTripPage = ({ trips }: Props) => {
+    console.log('🚀 ~ ManageTripPage ~ trips:', trips);
     return (
         <AppLayout>
             <Head title="Kelola Trip Pengiriman" />
