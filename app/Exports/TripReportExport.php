@@ -36,6 +36,7 @@ class TripReportExport implements FromCollection, WithHeadings
             ->where('trips.status', TripStatusEntities::COMPLETED)
             ->whereBetween('deliveries.created_at', [$this->from, $this->to])
             ->select(
+                'trips.id as trip_id',
                 'drivers.id as driver_id',
                 'drivers.name as driver_name',
                 'helpers.id as helper_id',
@@ -46,6 +47,7 @@ class TripReportExport implements FromCollection, WithHeadings
                 DB::raw('SUM(trips.trip_duration / 60) as total_duration'), // Convert seconds to minutes
                 DB::raw('ROUND(SUM(trips.trip_duration / 60) * 200, 2) as total_commission'),
             )
+            ->groupBy('trips.id')
             ->get();
 
         $tripStops = DB::table('trip_stops')
@@ -64,15 +66,31 @@ class TripReportExport implements FromCollection, WithHeadings
                 'trip_stops.created_at as stop_created_at',
                 'trip_stops.updated_at as stop_updated_at'
             )
+            ->groupBy('trip_stops.id')
             ->get();
 
         $mergedTrips = $trips->map(function ($trip) use ($tripStops) {
             $matchingStops = $tripStops->filter(function ($stop) use ($trip) {
-                return $stop->after_trip_id == $trip->driver_id || $stop->before_trip_id == $trip->driver_id;
+                return $stop->after_trip_id == $trip->trip_id;
             });
 
             if ($matchingStops->isEmpty()) {
-                return $trip;
+                return (object) [
+                    'driver_id' => $trip->driver_id,
+                    'driver_name' => $trip->driver_name,
+                    'helper_id' => $trip->helper_id ?? '-',
+                    'helper_name' => $trip->helper_name ?? '-',
+                    'destination_name' => $trip->destination_name,
+                    'total_items' => $trip->total_items,
+                    'total_distance' => $trip->total_distance,
+                    'total_duration' => $trip->total_duration,
+                    'total_commission' => $trip->total_commission,
+                    'stop_id' => '-',
+                    'stop_notes' => '-',
+                    'stop_status' => '-',
+                    'stop_created_at' => '-',
+                    'stop_updated_at' => '-',
+                ];
             }
 
             return $matchingStops->map(function ($stop) use ($trip) {
@@ -92,8 +110,8 @@ class TripReportExport implements FromCollection, WithHeadings
                     'stop_created_at' => $stop->stop_created_at ?? '-',
                     'stop_updated_at' => $stop->stop_updated_at ?? '-',
                 ];
-            });
-        })->flatten(1)->sortBy('stop_created_at');
+            })->first();
+        })->sortBy('stop_created_at');
 
         return $mergedTrips;
     }

@@ -17,22 +17,9 @@ import { Separator } from '../ui/separator';
 const TripDeliveryDetailMap = () => {
     const serverProps = usePage().props;
     const delivery = serverProps.delivery as Delivery;
-    console.log('🚀 ~ TripDeliveryDetailMap ~ delivery:', delivery);
     const trip = serverProps.trip as Trip;
-    console.log('🚀 ~ TripDeliveryDetailMap ~ trip:', trip);
 
     const map = useMap('ongoing-trip-map');
-
-    const [mapLoaded, setMapLoaded] = useState(false);
-    console.log('🚀 ~ TripDeliveryDetailMap ~ mapLoaded:', mapLoaded);
-
-    useEffect(() => {
-        if (map) {
-            console.log('map', map);
-            setMapLoaded(true);
-            router.reload();
-        }
-    }, [map]);
 
     const currentLocation = useGeoLocation({
         onError: (error) => {
@@ -41,11 +28,7 @@ const TripDeliveryDetailMap = () => {
     });
 
     const defaultLocation = useMemo<{ lat: number; lng: number }>(() => {
-        if (currentLocation.loaded && currentLocation.coordinates) {
-            return { lat: currentLocation.coordinates?.lat as number, lng: currentLocation.coordinates?.lng as number };
-        }
-
-        return { lat: 3.595226750097991, lng: 98.67200113297093 };
+        return { lat: currentLocation.coordinates?.lat as number, lng: currentLocation.coordinates?.lng as number };
     }, [currentLocation]);
 
     const [deliveryItems, setDeliveryItems] = useState<DeliveryItemWithMapInfo[]>(
