@@ -5,15 +5,15 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { Auth, User, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { Car, ChartNoAxesCombined, LayoutGrid, LocateFixed, Map, Truck, Users, Warehouse } from 'lucide-react';
-import AppLogo from './app-logo';
 import { useMemo } from 'react';
+import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: '/dashboard',
         icon: LayoutGrid,
-        role: ['super admin', 'admin', 'driver','helper'],
+        role: ['super admin', 'admin', 'driver', 'helper'],
     },
     {
         title: 'Kelola Kendaraan',
@@ -55,7 +55,7 @@ const mainNavItems: NavItem[] = [
         title: 'Laporan Komisi',
         href: '/laporan-komisi',
         icon: ChartNoAxesCombined,
-        role: ['super admin', 'admin'],
+        role: ['super admin'],
     },
 ];
 
@@ -65,10 +65,10 @@ export function AppSidebar() {
     const serverProps = usePage().props;
     const user = (serverProps.auth as Auth)?.user;
     console.log('user', user);
-    const roles = (user as User)?.roles?.map(role => role.name) || [];
+    const roles = (user as User)?.roles?.map((role) => role.name) || [];
 
     const filteredMainNavItems = useMemo(() => {
-        return mainNavItems.filter(item => roles.some(role => item.role?.includes(role)));
+        return mainNavItems.filter((item) => roles.some((role) => item.role?.includes(role)));
     }, [roles]);
 
     return (
