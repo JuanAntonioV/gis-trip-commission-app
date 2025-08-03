@@ -33,12 +33,16 @@ class DeliveryController extends Controller
         $delivery = \App\Models\Delivery::with(['vehicle', 'driver', 'helper', 'status', 'staff', 'cancelledStaff', 'items.location'])
             ->with(['items' => function ($query) {
                 $query->select('delivery_items.*', DB::raw('COUNT(*) as item_count'))
-                    ->whereDoesntHave('tripItem')->orWhereHas('tripItem.trip', function ($q) {
+                    ->whereHas('trip', function ($q) {
                         $q->whereIn('status', [TripStatusEntities::CANCELLED]);
-                    })->groupBy('location_id');
+                    })
+                    ->orWhereDoesntHave('tripItem')
+                    ->groupBy('location_id');
             }])
             ->withCount('items as total_items')
             ->findOrFail($id);
+
+        dd($delivery->toArray());
 
         return Inertia::render('deliveries/DeliveryMapsPage', [
             'delivery' => $delivery,

@@ -29,6 +29,13 @@ class DeliveryItem extends Model
 
     public function tripItem()
     {
-        return $this->belongsTo(TripItem::class, 'id', 'delivery_item_id');
+        return $this->hasOne(TripItem::class);
+    }
+
+    public function trip()
+    {
+        return $this->belongsToMany(Trip::class, 'trip_items', 'delivery_item_id', 'trip_id')
+            ->withPivot('status')
+            ->withTimestamps();
     }
 }

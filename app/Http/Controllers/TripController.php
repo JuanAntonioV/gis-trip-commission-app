@@ -167,7 +167,7 @@ class TripController extends Controller
             $startingKm = $trip->starting_km;
 
             $trip->trip_duration = Carbon::parse($trip->start_time)->diffInSeconds(now());
-            $trip->trip_distance = $endingKm - $startingKm;
+            $trip->trip_distance = round($endingKm - $startingKm, 2);
             $trip->status = TripStatusEntities::COMPLETED;
             $trip->destination_latitude = $latitude;
             $trip->destination_longitude = $longitude;
