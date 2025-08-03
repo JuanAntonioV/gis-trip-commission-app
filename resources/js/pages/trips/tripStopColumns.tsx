@@ -14,7 +14,7 @@ export const tripStopColumns: ColumnDef<TripStop>[] = [
     {
         accessorKey: 'destination_name',
         header: 'Nama Lokasi Pemberhentian',
-        cell: ({ getValue }) => `${getValue() || 'N/A'}`,
+        cell: ({ getValue }) => `${getValue() || '-'}`,
     },
     {
         accessorKey: 'ending_km',
@@ -34,6 +34,6 @@ export const tripStopColumns: ColumnDef<TripStop>[] = [
     {
         accessorKey: 'status.name',
         header: 'Status',
-        cell: ({ getValue, row }) => <Badge className={cn(TRIP_STATUS_COLORS[row.original.status.id])}>{getValue<string>() || 'N/A'}</Badge>,
+        cell: ({ getValue, row }) => <Badge className={cn(TRIP_STATUS_COLORS[row.original.status.id])}>{getValue<string>() || '-'}</Badge>,
     },
 ];

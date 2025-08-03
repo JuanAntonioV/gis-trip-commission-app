@@ -38,23 +38,23 @@ const TripDetailPage = () => {
                         <LabelItem label="Selesai pada" value={dayjs(trip.end_time).format('DD MMMM YYYY HH:mm')} />
                         <LabelItem
                             label="Status"
-                            value={<Badge className={cn(TRIP_STATUS_COLORS[trip.status.id])}>{trip.status.name || 'N/A'}</Badge>}
+                            value={<Badge className={cn(TRIP_STATUS_COLORS[trip.status.id])}>{trip.status.name || '-'}</Badge>}
                         />
                     </div>
 
                     {trip.status.id === TRIP_STATUSES.CANCELLED && (
                         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                            <LabelItem label="Alasan Pembatalan" value={trip.cancellation_reason || 'N/A'} />
+                            <LabelItem label="Alasan Pembatalan" value={trip.cancellation_reason || '-'} />
                         </div>
                     )}
 
                     <Separator className="my-6" />
 
                     <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        <LabelItem label="Pengemudi" value={trip.delivery.driver?.name || 'N/A'} />
-                        <LabelItem label="Kernek" value={trip.delivery.helper?.name || 'N/A'} />
-                        <LabelItem label="Kendaraan" value={trip.delivery.vehicle?.name || 'N/A'} />
-                        <LabelItem label="Nomor Polisi" value={trip.delivery.vehicle?.license_plate || 'N/A'} />
+                        <LabelItem label="Pengemudi" value={trip.delivery.driver?.name || '-'} />
+                        <LabelItem label="Kernek" value={trip.delivery.helper?.name || '-'} />
+                        <LabelItem label="Kendaraan" value={trip.delivery.vehicle?.name || '-'} />
+                        <LabelItem label="Nomor Polisi" value={trip.delivery.vehicle?.license_plate || '-'} />
                     </div>
 
                     <HeadingSmall title="Daftar Barang" description="Daftar barang yang dikirimkan dalam pengiriman ini." className="mt-10" />
@@ -76,8 +76,8 @@ const TripDetailPage = () => {
                             {trip.items?.length ? (
                                 trip.items.map((item, index) => (
                                     <TableRow key={index}>
-                                        <TableCell>{item.location?.name || 'N/A'}</TableCell>
-                                        <TableCell>{item.invoice_number || 'N/A'}</TableCell>
+                                        <TableCell>{item.location?.name || '-'}</TableCell>
+                                        <TableCell>{item.invoice_number || '-'}</TableCell>
                                         <TableCell>{formatNumber(item.weight)} kg</TableCell>
                                     </TableRow>
                                 ))

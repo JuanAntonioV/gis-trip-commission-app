@@ -33,7 +33,7 @@ const DeliveryDetailPage = () => {
                         <LabelItem label="Jadwal Pengiriman" value={dayjs(delivery.scheduled_at).format('DD MMMM YYYY HH:mm')} />
                         <LabelItem
                             label="Status"
-                            value={<Badge className={cn(DELIVERY_STATUS_COLORS[delivery.status.id])}>{delivery.status.name || 'N/A'}</Badge>}
+                            value={<Badge className={cn(DELIVERY_STATUS_COLORS[delivery.status.id])}>{delivery.status.name || '-'}</Badge>}
                         />
                         <LabelItem label="Dibuat Oleh" value={delivery.staff.name} />
                         <LabelItem label="Dibuat Pada" value={dayjs(delivery.created_at).format('DD MMMM YYYY HH:mm')} />
@@ -42,31 +42,28 @@ const DeliveryDetailPage = () => {
                     <HeadingSmall title="Informasi Kendaraan" description="Detail informasi kendaraan yang digunakan." className="mt-10" />
                     <Separator className="my-4" />
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                        <LabelItem label="Kendaraan" value={delivery.vehicle ? delivery.vehicle.name : 'N/A'} />
-                        <LabelItem label="Pengemudi" value={delivery.driver ? delivery.driver.name : 'N/A'} />
-                        <LabelItem label="Kernek" value={delivery.helper ? delivery.helper.name : 'N/A'} />
+                        <LabelItem label="Kendaraan" value={delivery.vehicle ? delivery.vehicle.name : '-'} />
+                        <LabelItem label="Pengemudi" value={delivery.driver ? delivery.driver.name : '-'} />
+                        <LabelItem label="Kernek" value={delivery.helper ? delivery.helper.name : '-'} />
                     </div>
                     <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                        <LabelItem
-                            label="Dimulai Pada"
-                            value={delivery.started_at ? dayjs(delivery.started_at).format('DD MMMM YYYY HH:mm') : 'N/A'}
-                        />
+                        <LabelItem label="Dimulai Pada" value={delivery.started_at ? dayjs(delivery.started_at).format('DD MMMM YYYY HH:mm') : '-'} />
                         <LabelItem
                             label="Selesai Pada"
-                            value={delivery.finished_at ? dayjs(delivery.finished_at).format('DD MMMM YYYY HH:mm') : 'N/A'}
+                            value={delivery.finished_at ? dayjs(delivery.finished_at).format('DD MMMM YYYY HH:mm') : '-'}
                         />
                         <LabelItem
                             label="Dikonfirmasi Pada"
-                            value={delivery.confirmed_at ? dayjs(delivery.confirmed_at).format('DD MMMM YYYY HH:mm') : 'N/A'}
+                            value={delivery.confirmed_at ? dayjs(delivery.confirmed_at).format('DD MMMM YYYY HH:mm') : '-'}
                         />
                     </div>
                     <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                         <LabelItem
                             label="Dibatalkan Pada"
-                            value={delivery.cancelled_at ? dayjs(delivery.cancelled_at).format('DD MMMM YYYY HH:mm') : 'N/A'}
+                            value={delivery.cancelled_at ? dayjs(delivery.cancelled_at).format('DD MMMM YYYY HH:mm') : '-'}
                         />
-                        <LabelItem label="Dibatalkan Oleh" value={delivery.cancelledStaff ? delivery.cancelledStaff.name : 'N/A'} />
-                        <LabelItem label="Alasan Pembatalan" value={delivery.cancel_reason || 'N/A'} />
+                        <LabelItem label="Dibatalkan Oleh" value={delivery.cancelledStaff ? delivery.cancelledStaff.name : '-'} />
+                        <LabelItem label="Alasan Pembatalan" value={delivery.cancel_reason || '-'} />
                     </div>
 
                     <HeadingSmall title="Daftar Barang" description="Daftar barang yang dikirimkan dalam pengiriman ini." className="mt-10" />
@@ -90,10 +87,10 @@ const DeliveryDetailPage = () => {
                             {delivery.items?.length ? (
                                 delivery.items.map((item, index) => (
                                     <TableRow key={index}>
-                                        <TableCell>{item.location?.name || 'N/A'}</TableCell>
-                                        <TableCell>{item.invoice_number || 'N/A'}</TableCell>
+                                        <TableCell>{item.location?.name || '-'}</TableCell>
+                                        <TableCell>{item.invoice_number || '-'}</TableCell>
                                         <TableCell>{formatNumber(item.weight)} kg</TableCell>
-                                        {/* <TableCell>{item.status || 'N/A'}</TableCell> */}
+                                        {/* <TableCell>{item.status || '-'}</TableCell> */}
                                     </TableRow>
                                 ))
                             ) : (

@@ -17,17 +17,17 @@ export const columns: ColumnDef<Trip>[] = [
     {
         accessorKey: 'delivery_id',
         header: 'Pengiriman ID',
-        cell: ({ getValue, row }) => `${getValue() || 'N/A'} (${row.original.delivery?.status.name || 'N/A'})`,
+        cell: ({ getValue, row }) => `${getValue() || '-'} (${row.original.delivery?.status.name || '-'})`,
     },
     {
         accessorKey: 'destination_location.name',
         header: 'Lokasi Tujuan',
-        cell: ({ getValue }) => `${getValue() || 'N/A'}`,
+        cell: ({ getValue }) => `${getValue() || '-'}`,
     },
     {
         accessorKey: 'delivery.driver.name',
         header: 'Pengemudi',
-        cell: ({ getValue }) => `${getValue() || 'N/A'}`,
+        cell: ({ getValue }) => `${getValue() || '-'}`,
     },
     {
         accessorKey: 'delivery.helper.name',
@@ -67,7 +67,7 @@ export const columns: ColumnDef<Trip>[] = [
     {
         accessorKey: 'status.name',
         header: 'Status',
-        cell: ({ getValue, row }) => <Badge className={cn(TRIP_STATUS_COLORS[row.original.status.id])}>{getValue<string>() || 'N/A'}</Badge>,
+        cell: ({ getValue, row }) => <Badge className={cn(TRIP_STATUS_COLORS[row.original.status.id])}>{getValue<string>() || '-'}</Badge>,
     },
     {
         accessorKey: 'actions',

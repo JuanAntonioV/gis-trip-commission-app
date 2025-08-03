@@ -19,9 +19,9 @@ class TripStatusSeeder extends Seeder
         }
 
         $statuses = [
-            ['name' => 'In Progress'],
-            ['name' => 'Completed'],
-            ['name' => 'Cancelled'],
+            ['name' => 'Dalam Perjalanan'],
+            ['name' => 'Selesai'],
+            ['name' => 'Dibatalkan'],
         ];
 
         foreach ($statuses as $status) {

@@ -18,10 +18,10 @@ class DeliveryStatusSeeder extends Seeder
         }
 
         $statuses = [
-            ['name' => 'Pending'],
-            ['name' => 'In Progress'],
-            ['name' => 'Completed'],
-            ['name' => 'Cancelled'],
+            ['name' => 'Menunggu Pengiriman'],
+            ['name' => 'Dalam Perjalanan'],
+            ['name' => 'Selesai'],
+            ['name' => 'Dibatalkan'],
         ];
 
         foreach ($statuses as $status) {

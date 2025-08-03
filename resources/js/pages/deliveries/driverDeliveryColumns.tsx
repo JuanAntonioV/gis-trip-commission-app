@@ -17,17 +17,17 @@ export const driverDeliveryColumns: ColumnDef<Delivery>[] = [
     {
         accessorKey: 'vehicle.name',
         header: 'Kendaraan',
-        cell: ({ getValue, row }) => `${getValue()} (${row.original.vehicle?.license_plate || 'N/A'})`,
+        cell: ({ getValue, row }) => `${getValue()} (${row.original.vehicle?.license_plate || '-'})`,
     },
     {
         accessorKey: 'driver.name',
         header: 'Pengemudi',
-        cell: ({ getValue }) => `${getValue() || 'N/A'}`,
+        cell: ({ getValue }) => `${getValue() || '-'}`,
     },
     {
         accessorKey: 'helper.name',
         header: 'Kernek',
-        cell: ({ getValue }) => `${getValue() || 'N/A'}`,
+        cell: ({ getValue }) => `${getValue() || '-'}`,
     },
     {
         accessorKey: 'total_items',
@@ -37,7 +37,7 @@ export const driverDeliveryColumns: ColumnDef<Delivery>[] = [
     {
         accessorKey: 'status.name',
         header: 'Status',
-        cell: ({ getValue, row }) => <Badge className={cn(DELIVERY_STATUS_COLORS[row.original.status.id])}>{getValue<string>() || 'N/A'}</Badge>,
+        cell: ({ getValue, row }) => <Badge className={cn(DELIVERY_STATUS_COLORS[row.original.status.id])}>{getValue<string>() || '-'}</Badge>,
     },
     {
         accessorKey: 'scheduled_at',

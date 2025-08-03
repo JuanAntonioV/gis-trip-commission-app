@@ -26,12 +26,12 @@ export const columns: ColumnDef<Location>[] = [
     {
         accessorKey: 'address',
         header: 'Alamat',
-        cell: ({ getValue }) => getValue() || 'N/A',
+        cell: ({ getValue }) => getValue() || '-',
     },
     {
         accessorKey: 'postal_code',
         header: 'Kode Pos',
-        cell: ({ getValue }) => getValue() || 'N/A',
+        cell: ({ getValue }) => getValue() || '-',
     },
     {
         accessorKey: 'created_at',
