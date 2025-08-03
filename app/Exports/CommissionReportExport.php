@@ -10,8 +10,9 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 // Removed unused FromCollection import
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class CommissionReportExport implements FromCollection
+class CommissionReportExport implements FromCollection, WithHeadings
 {
     use Exportable;
 
