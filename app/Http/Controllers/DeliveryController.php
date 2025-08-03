@@ -223,7 +223,7 @@ class DeliveryController extends Controller
     {
         $data = $request->validate([
             'delivery_id' => 'required|exists:deliveries,id',
-            'reason' => 'required|string|max:255',
+            'cancel_reason' => 'required|string|max:255',
         ]);
 
         $delivery = \App\Models\Delivery::findOrFail($data['delivery_id']);
@@ -235,12 +235,12 @@ class DeliveryController extends Controller
         try {
             $delivery->status = DeliveryStatusEntities::CANCELLED;
             $delivery->cancelled_at = now();
-            $delivery->cancel_reason = $data['reason'];
+            $delivery->cancel_reason = $data['cancel_reason'];
             $delivery->cancelled_by = Auth::id();
             $delivery->save();
 
             \App\Models\Trip::where('delivery_id', $delivery->id)
-                ->update(['status' => TripStatusEntities::CANCELLED, 'cancellation_reason' => 'Delivery cancelled: ' . $data['reason']]);
+                ->update(['status' => TripStatusEntities::CANCELLED, 'cancellation_reason' => 'Delivery cancelled: ' . $data['cancel_reason']]);
 
             DB::commit();
         } catch (\Exception $e) {
