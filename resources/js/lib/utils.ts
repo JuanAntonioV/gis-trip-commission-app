@@ -17,7 +17,8 @@ export function onlyNumber(e: React.ChangeEvent<HTMLInputElement>) {
     e.target.value = e.target.value.replace(/\D/g, ''); // Hanya izinkan angka
 }
 export function getBreadcrumbs(pathname: string): BreadcrumbItem[] {
-    const parts = pathname.split('/').filter((part) => part !== '');
+    const cleanPathname = pathname.split('?')[0]; // Remove query parameters
+    const parts = cleanPathname.split('/').filter((part) => part !== '');
     return parts.map((part, index) => ({
         title: part.replace(/[-_]/g, ' '), // Replace dashes or underscores with spaces
         href: '/' + parts.slice(0, index + 1).join('/'), // Construct the href for each breadcrumb
