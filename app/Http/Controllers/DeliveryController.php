@@ -30,16 +30,37 @@ class DeliveryController extends Controller
         $userRole = Auth::user()->roles->first()->name;
         $isAdmin = $userRole === 'admin' || $userRole === 'super admin';
 
-        $delivery = \App\Models\Delivery::with(['vehicle', 'driver', 'helper', 'status', 'staff', 'cancelledStaff', 'items.location'])
+        $delivery = \App\Models\Delivery::with([
+            'vehicle',
+            'driver',
+            'helper',
+            'status',
+            'staff',
+            'cancelledStaff',
+            'items.location',
+            'items.trip', // needed for status checks later
+        ])
             ->with(['items' => function ($query) {
-                $query->select('delivery_items.*', DB::raw('COUNT(*) as item_count'))
-                    // ->whereHas('trip', function ($q) {
-                    //     $q->whereIn('status', [TripStatusEntities::CANCELLED]);
-                    // })
-                    ->whereDoesntHave('tripItem')
-                    ->groupBy('location_id');
+                $query->select('delivery_items.*')
+                    ->where(function ($q) {
+                        $q->whereDoesntHave('tripItem') // no tripItem at all
+                            ->orWhere(function ($q2) {
+                                $q2->whereHas('trip', function ($q3) {
+                                    $q3->whereIn('status', [TripStatusEntities::CANCELLED]);
+                                });
+                            });
+                    });
             }])
-            ->withCount('items as total_items')
+            ->withCount(['items as total_items' => function ($query) {
+                $query->where(function ($q) {
+                    $q->whereDoesntHave('tripItem')
+                        ->orWhere(function ($q2) {
+                            $q2->whereHas('trip', function ($q3) {
+                                $q3->whereIn('status', [TripStatusEntities::CANCELLED]);
+                            });
+                        });
+                });
+            }])
             ->findOrFail($id);
 
         return Inertia::render('deliveries/DeliveryMapsPage', [
