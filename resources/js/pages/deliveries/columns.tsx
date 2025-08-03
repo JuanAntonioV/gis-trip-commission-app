@@ -47,12 +47,12 @@ export const columns: ColumnDef<Delivery>[] = [
     {
         accessorKey: 'started_at',
         header: 'Dimulai Pada',
-        cell: ({ getValue }) => (getValue() ? dayjs(getValue<string>()).format('DD/MM/YYYY HH:mm') : 'Belum Dimulai'),
+        cell: ({ getValue }) => (getValue() ? dayjs(getValue<string>()).format('DD/MM/YYYY HH:mm') : '-'),
     },
     {
         accessorKey: 'finished_at',
         header: 'Diselesaikan Pada',
-        cell: ({ getValue }) => (getValue() ? dayjs(getValue<string>()).format('DD/MM/YYYY HH:mm') : 'Belum Selesai'),
+        cell: ({ getValue }) => (getValue() ? dayjs(getValue<string>()).format('DD/MM/YYYY HH:mm') : '-'),
     },
     {
         accessorKey: 'created_at',
