@@ -43,7 +43,7 @@ const CreateDeliveryForm = () => {
         vehicle_id: '',
         driver_id: '',
         helper_id: '',
-        scheduled_at: dayjs().add(1, 'day').toDate() as Date | null,
+        scheduled_at: dayjs().toDate() as Date | null,
         items: [
             {
                 location_id: '',

@@ -33,10 +33,10 @@ class DeliveryController extends Controller
         $delivery = \App\Models\Delivery::with(['vehicle', 'driver', 'helper', 'status', 'staff', 'cancelledStaff', 'items.location'])
             ->with(['items' => function ($query) {
                 $query->select('delivery_items.*', DB::raw('COUNT(*) as item_count'))
-                    ->whereHas('trip', function ($q) {
-                        $q->whereIn('status', [TripStatusEntities::CANCELLED]);
-                    })
-                    ->orWhereDoesntHave('tripItem')
+                    // ->whereHas('trip', function ($q) {
+                    //     $q->whereIn('status', [TripStatusEntities::CANCELLED]);
+                    // })
+                    ->whereDoesntHave('tripItem')
                     ->groupBy('location_id');
             }])
             ->withCount('items as total_items')
