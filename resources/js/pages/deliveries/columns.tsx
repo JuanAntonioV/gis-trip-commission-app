@@ -26,12 +26,12 @@ export const columns: ColumnDef<Delivery>[] = [
     },
     {
         accessorKey: 'helper.name',
-        header: 'Kernek',
+        header: 'Helper',
         cell: ({ getValue }) => `${getValue() || '-'}`,
     },
     {
         accessorKey: 'total_items',
-        header: 'Total Barang',
+        header: 'Total Trip',
         cell: ({ getValue }) => `${getValue() || 0}`,
     },
     {

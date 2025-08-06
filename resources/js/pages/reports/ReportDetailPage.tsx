@@ -22,7 +22,7 @@ const ReportDetailPage = ({ report, allTrips }: Props) => {
             <Head title="Detail Laporan Komisi" />
 
             <main className="p-6">
-                <Heading title="Detail Laporan Komisi" description="Lihat detail laporan komisi untuk pengemudi atau kernek tertentu." />
+                <Heading title="Detail Laporan Komisi" description="Lihat detail laporan komisi untuk pengemudi atau helper tertentu." />
 
                 <Separator className="my-4" />
 
@@ -37,7 +37,7 @@ const ReportDetailPage = ({ report, allTrips }: Props) => {
 
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                             <LabelItem label="Nama Pengemudi" value={report?.driver_name} />
-                            <LabelItem label="Nama Kernek" value={report?.helper_name || '-'} />
+                            <LabelItem label="Nama Helper" value={report?.helper_name || '-'} />
                             <LabelItem label="Total Trip" value={formatNumber(report?.total_trips)} />
                             <LabelItem label="Total Jarak" value={`${formatNumber(report?.total_distance)} km`} />
                             <LabelItem label="Total Durasi" value={`${formatNumber(report?.total_duration)} menit`} />
@@ -49,7 +49,7 @@ const ReportDetailPage = ({ report, allTrips }: Props) => {
                 <section className="mt-6 section">
                     <HeadingSmall
                         title="Riwayat Trip Pengemudi"
-                        description="Lihat riwayat trip yang telah dilakukan oleh pengemudi atau kernek ini."
+                        description="Lihat riwayat trip yang telah dilakukan oleh pengemudi atau helper ini."
                     />
 
                     <Separator className="my-4" />

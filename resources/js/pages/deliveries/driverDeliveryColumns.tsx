@@ -26,7 +26,7 @@ export const driverDeliveryColumns: ColumnDef<Delivery>[] = [
     },
     {
         accessorKey: 'helper.name',
-        header: 'Kernek',
+        header: 'Helper',
         cell: ({ getValue }) => `${getValue() || '-'}`,
     },
     {

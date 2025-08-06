@@ -37,6 +37,20 @@ const TripDetailPage = () => {
                         <LabelItem label="Dimulai pada" value={dayjs(trip.start_time).format('DD MMMM YYYY HH:mm')} />
                         <LabelItem label="Selesai pada" value={dayjs(trip.end_time).format('DD MMMM YYYY HH:mm')} />
                         <LabelItem
+                            label="Durasi Trip"
+                            value={
+                                trip.start_time && trip.end_time
+                                    ? (() => {
+                                          const duration = dayjs(trip.end_time).diff(dayjs(trip.start_time), 'second');
+                                          const hours = Math.floor(duration / 3600);
+                                          const minutes = Math.floor((duration % 3600) / 60);
+                                          const seconds = duration % 60;
+                                          return hours > 0 ? `${hours} jam ${minutes} menit ${seconds} detik` : `${minutes} menit ${seconds} detik`;
+                                      })()
+                                    : '-'
+                            }
+                        />
+                        <LabelItem
                             label="Status"
                             value={<Badge className={cn(TRIP_STATUS_COLORS[trip.status.id])}>{trip.status.name || '-'}</Badge>}
                         />
@@ -52,7 +66,7 @@ const TripDetailPage = () => {
 
                     <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         <LabelItem label="Pengemudi" value={trip.delivery.driver?.name || '-'} />
-                        <LabelItem label="Kernek" value={trip.delivery.helper?.name || '-'} />
+                        <LabelItem label="Helper" value={trip.delivery.helper?.name || '-'} />
                         <LabelItem label="Kendaraan" value={trip.delivery.vehicle?.name || '-'} />
                         <LabelItem label="Nomor Polisi" value={trip.delivery.vehicle?.license_plate || '-'} />
                     </div>

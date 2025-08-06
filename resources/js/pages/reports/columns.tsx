@@ -15,7 +15,7 @@ export const columns: ColumnDef<ReportCommission>[] = [
     },
     {
         accessorKey: 'helper_name',
-        header: 'Nama Kernek',
+        header: 'Nama Helper',
         cell: ({ getValue }) => getValue() || '-',
     },
     {
@@ -100,7 +100,7 @@ export const columns: ColumnDef<ReportCommission>[] = [
                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p>Lihat Riwayat Trip Kernek</p>
+                                <p>Lihat Riwayat Trip Helper</p>
                             </TooltipContent>
                         </Tooltip>
                     )} */}
