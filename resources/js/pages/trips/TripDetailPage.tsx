@@ -5,10 +5,9 @@ import HeadingSmall from '@/components/heading-small';
 import LabelItem from '@/components/LabelItem';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { TRIP_STATUS_COLORS, TRIP_STATUSES } from '@/constants';
 import AppLayout from '@/layouts/app-layout';
-import { cn, formatNumber } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { Trip, TripStop } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import dayjs from 'dayjs';
@@ -71,14 +70,14 @@ const TripDetailPage = () => {
                         <LabelItem label="Nomor Polisi" value={trip.delivery.vehicle?.license_plate || '-'} />
                     </div>
 
-                    <HeadingSmall title="Daftar Barang" description="Daftar barang yang dikirimkan dalam pengiriman ini." className="mt-10" />
+                    {/* <HeadingSmall title="Daftar Barang" description="Daftar barang yang dikirimkan dalam pengiriman ini." className="mt-10" />
                     <Separator className="my-4" />
                     <div className="mb-4 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                         <LabelItem label="Total Barang" value={formatNumber(trip.total_items || 0)} />
                         <LabelItem label="Total Berat" value={`${formatNumber(trip.items.reduce((acc, item) => acc + item.weight, 0))} kg`} />
-                    </div>
+                    </div> */}
 
-                    <Table>
+                    {/* <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Lokasi</TableHead>
@@ -103,7 +102,7 @@ const TripDetailPage = () => {
                                 </TableRow>
                             )}
                         </TableBody>
-                    </Table>
+                    </Table> */}
 
                     {isAdmin && trip.status.id === TRIP_STATUSES.IN_PROGRESS && (
                         <div className="mt-6 flex items-center gap-4">
