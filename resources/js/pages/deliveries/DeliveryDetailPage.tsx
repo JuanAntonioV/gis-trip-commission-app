@@ -5,9 +5,10 @@ import LabelItem from '@/components/LabelItem';
 import StartTripButton from '@/components/StartTripButton';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DELIVERY_STATUS_COLORS, DELIVERY_STATUSES } from '@/constants';
 import AppLayout from '@/layouts/app-layout';
-import { cn } from '@/lib/utils';
+import { cn, formatNumber } from '@/lib/utils';
 import { Delivery } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import dayjs from 'dayjs';
@@ -65,15 +66,15 @@ const DeliveryDetailPage = () => {
                         <LabelItem label="Alasan Pembatalan" value={delivery.cancel_reason || '-'} />
                     </div>
 
-                    {/* <HeadingSmall title="Daftar Barang" description="Daftar barang yang dikirimkan dalam pengiriman ini." className="mt-10" />
+                    <HeadingSmall title="Daftar Lokasi" description="Daftar lokasi yang akan dikirimkan dalam pengiriman ini." className="mt-10" />
                     <Separator className="my-4" />
-                    <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                    {/* <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                         <LabelItem label="Total Barang" value={formatNumber(delivery.total_items)} />
                         <LabelItem label="Total Berat" value={`${formatNumber(delivery.items.reduce((acc, item) => acc + item.weight, 0))} kg`} />
                         <LabelItem label="Total Lokasi" value={delivery.items.length} />
                     </div> */}
 
-                    {/* <Table>
+                    <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Lokasi</TableHead>
@@ -98,7 +99,7 @@ const DeliveryDetailPage = () => {
                                 </TableRow>
                             )}
                         </TableBody>
-                    </Table> */}
+                    </Table>
 
                     {isAdmin &&
                         (delivery.status.id === DELIVERY_STATUSES.DELIVERY_STATUS_PENDING ||
