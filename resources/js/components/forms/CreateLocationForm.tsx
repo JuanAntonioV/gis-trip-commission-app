@@ -135,6 +135,15 @@ const CreateLocationForm = () => {
                 data={locationTypes.map((type) => ({ value: String(type.id), label: type.name }))}
             />
 
+            <TextInput
+                value={data.postal_code}
+                onChange={(value) => setData('postal_code', value as string)}
+                label="Kode Pos"
+                placeholder="Contoh: 12345"
+                errors={errors.postal_code}
+                autoComplete="postal-code"
+            />
+
             <TextareaInput
                 value={data.address}
                 onChange={(value) => setData('address', value as string)}

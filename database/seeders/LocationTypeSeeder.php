@@ -21,7 +21,6 @@ class LocationTypeSeeder extends Seeder
             ['name' => 'Gudang', 'description' => 'Tempat penyimpanan barang'],
             ['name' => 'Toko', 'description' => 'Tempat tujuan pengiriman barang'],
             ['name' => 'Kantor', 'description' => 'Tempat administrasi dan manajemen'],
-            ['name' => 'SPBU', 'description' => 'Stasiun Pengisian Bahan Bakar Umum'],
             ['name' => 'Bengkel', 'description' => 'Tempat perbaikan kendaraan'],
             ['name' => 'Rest Area', 'description' => 'Area istirahat bagi pengemudi'],
             ['name' => 'Rumah Makan', 'description' => 'Tempat makan dan minum'],

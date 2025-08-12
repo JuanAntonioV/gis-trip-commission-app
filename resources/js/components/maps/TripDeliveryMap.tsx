@@ -143,15 +143,17 @@ const TripDeliveryMap = () => {
         }
 
         // remove existing directions if any
-        const existingDirectionsRenderer = map.get('directionsRenderer');
+        const existingDirectionsRenderer = (map as any).directionsRenderer;
         if (existingDirectionsRenderer) {
             existingDirectionsRenderer.setMap(null);
+            (map as any).directionsRenderer = null;
         }
 
         const directionsService = new google.maps.DirectionsService();
         const directionsRenderer = new google.maps.DirectionsRenderer();
 
         directionsRenderer.setMap(map);
+        (map as any).directionsRenderer = directionsRenderer;
 
         directionsService.route(
             {
