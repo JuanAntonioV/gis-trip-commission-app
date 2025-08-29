@@ -57,11 +57,14 @@ export const columns: ColumnDef<Trip>[] = [
     {
         accessorKey: 'end_time',
         header: 'Total Komisi',
-        cell: ({ getValue, row }) => {
-            const diffInSeconds = dayjs(getValue<Date>()).diff(dayjs(row.original.start_time), 'second');
-            const minutes = Math.floor(diffInSeconds / 60);
-            const seconds = diffInSeconds % 60;
-            return 'Rp ' + formatNumber(minutes + seconds / 60 || 0);
+        cell: ({ row }) => {
+            // const diffInSeconds = dayjs(getValue<Date>()).diff(dayjs(row.original.start_time), 'second');
+            // const minutes = Math.floor(diffInSeconds / 60);
+            // const seconds = diffInSeconds % 60;
+            // return 'Rp ' + formatNumber(minutes + seconds / 60 || 0);
+
+            const distance = row.original.ending_km ? row.original.ending_km - row.original.starting_km : 0;
+            return 'Rp ' + formatNumber(distance * 200 || 0);
         },
     },
     {
