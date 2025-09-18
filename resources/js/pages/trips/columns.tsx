@@ -64,7 +64,7 @@ export const columns: ColumnDef<Trip>[] = [
             // return 'Rp ' + formatNumber(minutes + seconds / 60 || 0);
 
             const distance = row.original.ending_km ? row.original.ending_km - row.original.starting_km : 0;
-            return 'Rp ' + formatNumber(distance * 200 || 0);
+            return 'Rp ' + formatNumber(distance * 2000 || 0);
         },
     },
     {

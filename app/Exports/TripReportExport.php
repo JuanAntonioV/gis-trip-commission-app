@@ -45,7 +45,7 @@ class TripReportExport implements FromCollection, WithHeadings
                 DB::raw('COUNT(trip_items.id) as total_items'),
                 DB::raw('SUM(trips.trip_distance) as total_distance'),
                 DB::raw('SUM(trips.trip_duration / 60) as total_duration'), // Convert seconds to minutes
-                DB::raw('ROUND(SUM(trips.trip_distance) * 200, 2) as total_commission'),
+                DB::raw('ROUND(SUM(trips.trip_distance) * 2000, 2) as total_commission'),
             )
             ->groupBy('trips.id')
             ->get();

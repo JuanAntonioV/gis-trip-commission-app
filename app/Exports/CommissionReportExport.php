@@ -42,7 +42,7 @@ class CommissionReportExport implements FromCollection, WithHeadings
                 'drivers.name as driver_name',
                 'helpers.name as helper_name',
                 'helpers.id as helper_id',
-                DB::raw('ROUND(SUM(trips.trip_distance) * 200, 2) as total_commission'),
+                DB::raw('ROUND(SUM(trips.trip_distance) * 2000, 2) as total_commission'),
                 DB::raw('MAX(trips.created_at) as last_trip_date')
             )
             ->groupBy('deliveries.driver_id')

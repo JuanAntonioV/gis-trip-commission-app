@@ -16,6 +16,7 @@ class Trip extends Model
             ->withTimestamps();
     }
 
+    // Relation to the destination location
     public function destinationLocation()
     {
         return $this->belongsTo(Location::class, 'destination_location_id');

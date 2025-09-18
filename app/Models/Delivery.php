@@ -37,6 +37,7 @@ class Delivery extends Model
         'cancelled_at' => 'datetime',
     ];
 
+    // Generate a unique ID for the delivery
     public static function generateId()
     {
         $datePart = Carbon::now()->format('ymd');
