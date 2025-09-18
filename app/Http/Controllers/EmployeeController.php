@@ -113,13 +113,8 @@ class EmployeeController extends Controller
     public function changePassword(Request $request, User $employee)
     {
         $data = $request->validate([
-            'current_password' => 'required|string',
             'new_password' => 'required|string|min:6|confirmed',
         ]);
-
-        if (!Hash::check($data['current_password'], $employee->password)) {
-            return redirect()->back()->withErrors(['current_password' => 'Current password is incorrect.']);
-        }
 
         $employee->password = Hash::make($data['new_password']);
         $employee->save();

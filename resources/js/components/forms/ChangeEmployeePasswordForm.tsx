@@ -7,7 +7,6 @@ import TextInput from '../ui/TextInput';
 import { Button } from '../ui/button';
 
 type FormType = {
-    current_password: string;
     new_password: string;
     new_password_confirmation: string;
 };
@@ -17,7 +16,6 @@ const ChangeEmployeePasswordForm = () => {
     const employee = (serverProps.employee as User) || null;
 
     const { data, setData, put, errors, processing, recentlySuccessful, resetAndClearErrors } = useForm<Required<FormType>>({
-        current_password: '',
         new_password: '',
         new_password_confirmation: '',
     });
@@ -39,14 +37,6 @@ const ChangeEmployeePasswordForm = () => {
 
     return (
         <form onSubmit={submit} className="space-y-4">
-            <TextInput
-                label="Kata Sandi Saat Ini"
-                type="password"
-                placeholder="Masukkan kata sandi saat ini"
-                value={data.current_password}
-                onChange={(value) => setData('current_password', value)}
-                errors={errors.current_password}
-            />
             <TextInput
                 label="Kata Sandi Baru"
                 type="password"
